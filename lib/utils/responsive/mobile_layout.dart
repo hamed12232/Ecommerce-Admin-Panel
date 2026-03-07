@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../common/widgets/layouts/headers/header.dart';
+import '../../common/widgets/layouts/sidebars/sidebar.dart';
 
 class MobileLayout extends StatelessWidget {
   MobileLayout({super.key, this.body});
@@ -11,7 +12,7 @@ class MobileLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey,
-      drawer: const Drawer(),
+      drawer: const TSidebar(),
       appBar: THeader(scaffoldKey: scaffoldKey),
       body: body ?? const SizedBox(),
     );
