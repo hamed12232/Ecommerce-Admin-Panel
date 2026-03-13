@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
+import '../../../../../../routes/app_routes.dart';
 import '../../../../../../utils/constants/sizes.dart';
 import '../../../../../../utils/constants/text_strings.dart';
 
@@ -49,7 +50,9 @@ class TLoginForm extends StatelessWidget {
 
                 /// Forget Password
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(AppRoutes.forgetPassword);
+                  },
                   child: const Text(TTexts.forgetPassword),
                 ),
               ],

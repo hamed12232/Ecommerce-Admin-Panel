@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
 
-import '../../../../../../utils/constants/image_strings.dart';
 import '../../../../../../utils/constants/sizes.dart';
 import '../../../../../../utils/constants/text_strings.dart';
 
-class TLoginHeader extends StatelessWidget {
-  const TLoginHeader({
-    super.key,
-  });
+class TForgetPasswordHeader extends StatelessWidget {
+  const TForgetPasswordHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -16,26 +14,20 @@ class TLoginHeader extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Image(
-            height: 100,
-            width: 100,
-            image: AssetImage(TImages.darkAppLogo),
+          IconButton(
+            onPressed: () => Navigator.of(context).pop(),
+            icon: const Icon(Iconsax.arrow_circle_left4),
           ),
-          const SizedBox(height: TSizes.spaceBtwSections),
+          const SizedBox(height: TSizes.spaceBtwItems),
           Text(
-            TTexts.loginTitle,
+            TTexts.forgetPasswordTitle,
             style: Theme.of(context).textTheme.headlineMedium,
           ),
           const SizedBox(height: TSizes.sm),
           Text(
-            TTexts.loginSubTitle,
+            TTexts.forgetPasswordSubTitle,
             style: Theme.of(context).textTheme.bodyMedium,
           ),
-          const Center(
-              child: Text(
-            "www.alazher.com",
-            style: TextStyle(color: Colors.blue),
-          ))
         ],
       ),
     );

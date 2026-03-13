@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../../utils/constants/sizes.dart';
-import '../widgets/login_form.dart';
-import '../widgets/login_header.dart';
+import '../widgets/forget_password_form.dart';
+import '../widgets/forget_password_header.dart';
 
-class LoginScreenMobile extends StatelessWidget {
-  const LoginScreenMobile({super.key});
+class ForgetPasswordScreenMobile extends StatelessWidget {
+  const ForgetPasswordScreenMobile({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,9 +15,9 @@ class LoginScreenMobile extends StatelessWidget {
           padding: EdgeInsets.all(TSizes.defaultSpace),
           child: Column(
             children: [
-              TLoginHeader(),
+              TForgetPasswordHeader(),
 
-              TLoginForm(),
+              TForgetPasswordForm(),
             ],
           ),
         ),
