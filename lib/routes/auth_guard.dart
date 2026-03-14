@@ -30,9 +30,6 @@ class AuthGuard extends StatelessWidget {
           );
         }
         final bool isAuthenticated = snapshot.hasData;
-        // ── 4. Render the App ──
-        // We use ValueKey(isAuthenticated) to ensure the entire tree/Navigator
-        // is reset when the user logs in or out.
         return MaterialApp(
           key: ValueKey(isAuthenticated),
           themeMode: ThemeMode.system,

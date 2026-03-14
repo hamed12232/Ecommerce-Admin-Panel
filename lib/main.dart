@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:url_strategy/url_strategy.dart';
 import 'package:yt_ecommerce_admin_panel/firebase_options.dart';
 import 'package:yt_ecommerce_admin_panel/routes/auth_guard.dart';
+import 'package:yt_ecommerce_admin_panel/utils/di/service_locator.dart';
+import 'package:yt_ecommerce_admin_panel/utils/local_storage/shared_pref.dart';
 
-/// Entry point of Flutter App
 Future<void> main() async {
-  // Ensure that widgets are initialized
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await setupServiceLocator();
+  await SharedPrefServices.init();
   setPathUrlStrategy();
   runApp(const AuthGuard());
 }
