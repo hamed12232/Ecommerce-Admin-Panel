@@ -2,12 +2,12 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:yt_ecommerce_admin_panel/core/common/widgets/icons/t_circular_icon.dart';
+import 'package:yt_ecommerce_admin_panel/core/common/widgets/images/t_circular_image.dart';
 
-import '../../../../../../common/widgets/icons/t_circular_icon.dart';
-import '../../../../../../common/widgets/images/t_circular_image.dart';
-import '../../../../../../utils/constants/colors.dart';
-import '../../../../../../utils/constants/enums.dart';
-import '../../../../../../utils/constants/sizes.dart';
+import '../../../utils/constants/colors.dart';
+import '../../../utils/constants/enums.dart';
+import '../../../utils/constants/sizes.dart';
 import 't_rounded_image.dart';
 
 /// Widget for uploading images with optional editing functionality

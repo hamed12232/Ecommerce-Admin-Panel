@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:yt_ecommerce_admin_panel/utils/constants/colors.dart';
-import 'package:yt_ecommerce_admin_panel/utils/helpers/helper_functions.dart';
+import 'package:yt_ecommerce_admin_panel/core/utils/constants/colors.dart';
+import 'package:yt_ecommerce_admin_panel/core/utils/helpers/helper_functions.dart';
 
 class AppLoaders {
   static hideSnackBar(BuildContext context) =>

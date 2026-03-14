@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:yt_ecommerce_admin_panel/features/auth/modules/login/controller/cubit/login_cubit.dart';
-import 'package:yt_ecommerce_admin_panel/routes/app_routes.dart';
-import 'package:yt_ecommerce_admin_panel/utils/constants/image_strings.dart';
-import 'package:yt_ecommerce_admin_panel/utils/constants/sizes.dart';
-import 'package:yt_ecommerce_admin_panel/utils/constants/text_strings.dart';
-import 'package:yt_ecommerce_admin_panel/utils/popups/full_screen_loader.dart';
-import 'package:yt_ecommerce_admin_panel/utils/popups/loaders.dart';
-import 'package:yt_ecommerce_admin_panel/utils/validators/validation.dart';
+import 'package:yt_ecommerce_admin_panel/core/routes/app_routes.dart';
+import 'package:yt_ecommerce_admin_panel/core/utils/constants/image_strings.dart';
+import 'package:yt_ecommerce_admin_panel/core/utils/constants/sizes.dart';
+import 'package:yt_ecommerce_admin_panel/core/utils/constants/text_strings.dart';
+import 'package:yt_ecommerce_admin_panel/core/utils/popups/full_screen_loader.dart';
+import 'package:yt_ecommerce_admin_panel/core/utils/popups/loaders.dart';
+import 'package:yt_ecommerce_admin_panel/core/utils/validators/validation.dart';
 
 class TLoginForm extends StatelessWidget {
   const TLoginForm({super.key});

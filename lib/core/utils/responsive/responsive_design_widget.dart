@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:yt_ecommerce_admin_panel/utils/constants/sizes.dart';
+import 'package:yt_ecommerce_admin_panel/core/utils/constants/sizes.dart';
 
 class ResponsiveDesignWidget extends StatelessWidget {
   const ResponsiveDesignWidget(

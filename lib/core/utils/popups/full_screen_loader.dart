@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:yt_ecommerce_admin_panel/core/common/widgets/loaders/animation_loader.dart';
 
-import '../../common/widgets/loaders/animation_loader.dart';
 import '../constants/colors.dart';
 import '../helpers/helper_functions.dart';
 

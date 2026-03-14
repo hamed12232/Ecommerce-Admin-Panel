@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:yt_ecommerce_admin_panel/features/auth/domain/repositories/base_admin_auth_repository.dart';
-import 'package:yt_ecommerce_admin_panel/utils/exceptions/exceptions.dart';
+import 'package:yt_ecommerce_admin_panel/core/utils/exceptions/exceptions.dart';
 
 /// Use case for sending a password reset email.
 class AdminSendPasswordResetUseCase {

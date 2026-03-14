@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:yt_ecommerce_admin_panel/utils/responsive/site_templete.dart';
+import 'package:yt_ecommerce_admin_panel/core/utils/responsive/site_templete.dart';
 
 import 'screens/reset_password_desktop_tablet.dart';
 import 'screens/reset_password_mobile.dart';

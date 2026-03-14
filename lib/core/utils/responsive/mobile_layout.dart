@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-
-import '../../common/widgets/layouts/headers/header.dart';
-import '../../common/widgets/layouts/sidebars/sidebar.dart';
+import 'package:yt_ecommerce_admin_panel/core/common/widgets/layouts/headers/header.dart';
+import 'package:yt_ecommerce_admin_panel/core/common/widgets/layouts/sidebars/sidebar.dart';
 
 class MobileLayout extends StatelessWidget {
   MobileLayout({super.key, this.body});

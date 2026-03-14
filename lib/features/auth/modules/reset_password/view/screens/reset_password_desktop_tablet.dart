@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:yt_ecommerce_admin_panel/common/styles/spacing_styles.dart';
-import 'package:yt_ecommerce_admin_panel/utils/constants/colors.dart';
-import 'package:yt_ecommerce_admin_panel/utils/constants/image_strings.dart';
-import 'package:yt_ecommerce_admin_panel/utils/constants/sizes.dart';
-import 'package:yt_ecommerce_admin_panel/utils/constants/text_strings.dart';
+import 'package:yt_ecommerce_admin_panel/core/common/styles/spacing_styles.dart';
+import 'package:yt_ecommerce_admin_panel/core/utils/constants/colors.dart';
+import 'package:yt_ecommerce_admin_panel/core/utils/constants/image_strings.dart';
+import 'package:yt_ecommerce_admin_panel/core/utils/constants/sizes.dart';
+import 'package:yt_ecommerce_admin_panel/core/utils/constants/text_strings.dart';
 
 class ResetPasswordScreenDesktopTablet extends StatelessWidget {
   const ResetPasswordScreenDesktopTablet({super.key, required this.email});

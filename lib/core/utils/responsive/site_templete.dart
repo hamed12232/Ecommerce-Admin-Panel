@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:yt_ecommerce_admin_panel/utils/responsive/desktop_layout.dart';
-import 'package:yt_ecommerce_admin_panel/utils/responsive/mobile_layout.dart';
-import 'package:yt_ecommerce_admin_panel/utils/responsive/responsive_design_widget.dart';
-import 'package:yt_ecommerce_admin_panel/utils/responsive/tablet_layout.dart';
+import 'package:yt_ecommerce_admin_panel/core/utils/responsive/desktop_layout.dart';
+import 'package:yt_ecommerce_admin_panel/core/utils/responsive/mobile_layout.dart';
+import 'package:yt_ecommerce_admin_panel/core/utils/responsive/responsive_design_widget.dart';
+import 'package:yt_ecommerce_admin_panel/core/utils/responsive/tablet_layout.dart';
 
 class SiteTemplete extends StatelessWidget {
   const SiteTemplete(

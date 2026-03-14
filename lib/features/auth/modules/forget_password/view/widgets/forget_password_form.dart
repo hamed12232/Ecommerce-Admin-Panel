@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:yt_ecommerce_admin_panel/features/auth/modules/forget_password/controller/cubit/forget_password_cubit.dart';
-import 'package:yt_ecommerce_admin_panel/routes/app_routes.dart';
-import 'package:yt_ecommerce_admin_panel/utils/constants/sizes.dart';
-import 'package:yt_ecommerce_admin_panel/utils/constants/text_strings.dart';
-import 'package:yt_ecommerce_admin_panel/utils/popups/loaders.dart';
-import 'package:yt_ecommerce_admin_panel/utils/validators/validation.dart';
+import 'package:yt_ecommerce_admin_panel/core/routes/app_routes.dart';
+import 'package:yt_ecommerce_admin_panel/core/utils/constants/sizes.dart';
+import 'package:yt_ecommerce_admin_panel/core/utils/constants/text_strings.dart';
+import 'package:yt_ecommerce_admin_panel/core/utils/popups/loaders.dart';
+import 'package:yt_ecommerce_admin_panel/core/utils/validators/validation.dart';
 
 class TForgetPasswordForm extends StatelessWidget {
   const TForgetPasswordForm({super.key});
