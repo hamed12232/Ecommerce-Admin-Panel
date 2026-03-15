@@ -10,6 +10,12 @@ import 'package:yt_ecommerce_admin_panel/features/auth/domain/usecases/admin_sig
 import 'package:yt_ecommerce_admin_panel/features/auth/domain/usecases/fetch_admin_role_usecase.dart';
 import 'package:yt_ecommerce_admin_panel/features/auth/modules/forget_password/controller/cubit/forget_password_cubit.dart';
 import 'package:yt_ecommerce_admin_panel/features/auth/modules/login/controller/cubit/login_cubit.dart';
+import 'package:yt_ecommerce_admin_panel/features/personalization/controller/user_cubit.dart';
+import 'package:yt_ecommerce_admin_panel/features/personalization/data/datasources/base_user_data_source.dart';
+import 'package:yt_ecommerce_admin_panel/features/personalization/data/datasources/user_data_source.dart';
+import 'package:yt_ecommerce_admin_panel/features/personalization/data/repositories/user_repository_impl.dart';
+import 'package:yt_ecommerce_admin_panel/features/personalization/domain/repositories/base_user_repository.dart';
+import 'package:yt_ecommerce_admin_panel/features/personalization/domain/usecases/fetch_user_details_usecase.dart';
 
 final getIt = GetIt.instance;
 
@@ -19,9 +25,17 @@ Future<void> setupServiceLocator() async {
     () => AdminAuthDataSource(),
   );
 
+  getIt.registerLazySingleton<BaseUserDataSource>(
+    () => UserDataSource(),
+  );
+
   // ========== Repositories ==========
   getIt.registerLazySingleton<BaseAdminAuthRepository>(
     () => AdminAuthRepository(dataSource: getIt<BaseAdminAuthDataSource>()),
+  );
+
+  getIt.registerLazySingleton<BaseUserRepository>(
+    () => UserRepository(getIt<BaseUserDataSource>()),
   );
 
   // ========== Use Cases ==========
@@ -45,6 +59,10 @@ Future<void> setupServiceLocator() async {
     () => FetchAdminRoleUseCase(getIt<BaseAdminAuthRepository>()),
   );
 
+  getIt.registerLazySingleton<FetchUserDetailsUseCase>(
+    () => FetchUserDetailsUseCase(getIt<BaseUserRepository>()),
+  );
+
   // ========== Cubits ==========
   getIt.registerFactory<LoginCubit>(
     () => LoginCubit(
@@ -57,5 +75,9 @@ Future<void> setupServiceLocator() async {
     () => ForgetPasswordCubit(
       sendPasswordResetUseCase: getIt<AdminSendPasswordResetUseCase>(),
     ),
+  );
+
+  getIt.registerFactory<UserCubit>(
+    () => UserCubit(getIt<FetchUserDetailsUseCase>()),
   );
 }

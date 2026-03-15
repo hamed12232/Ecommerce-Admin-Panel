@@ -1,11 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:yt_ecommerce_admin_panel/core/utils/helpers/network_manager.dart';
+import 'package:yt_ecommerce_admin_panel/core/utils/local_storage/shared_pref.dart';
 import 'package:yt_ecommerce_admin_panel/features/auth/data/models/admin_model.dart';
 import 'package:yt_ecommerce_admin_panel/features/auth/domain/usecases/admin_login_usecase.dart';
 import 'package:yt_ecommerce_admin_panel/features/auth/domain/usecases/fetch_admin_role_usecase.dart';
-import 'package:yt_ecommerce_admin_panel/core/utils/helpers/network_manager.dart';
-import 'package:yt_ecommerce_admin_panel/core/utils/local_storage/shared_pref.dart';
 
 part 'login_state.dart';
 
@@ -73,6 +73,9 @@ class LoginCubit extends Cubit<LoginState> {
 
         await roleResult.fold(
           (failure) async {
+            await FirebaseAuth.instance.signOut();
+            emit(state.copyWith(
+                status: LoginStatus.error, error: failure.message));
           },
           (adminModel) async {
             if (adminModel.role != AppRole.admin) {
