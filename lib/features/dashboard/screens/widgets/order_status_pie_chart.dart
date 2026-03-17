@@ -41,7 +41,7 @@ class OrderStatusPieChart extends StatelessWidget {
 
           // Pie Chart
           SizedBox(
-            height: 300,
+            height: 200,
             child: PieChart(
               PieChartData(
                 sectionsSpace: 0,

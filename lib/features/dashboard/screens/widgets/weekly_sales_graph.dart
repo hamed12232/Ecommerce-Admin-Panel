@@ -23,7 +23,7 @@ class WeeklySalesGraph extends StatelessWidget {
               style: Theme.of(context).textTheme.headlineSmall),
           const SizedBox(height: TSizes.spaceBtwSections),
           SizedBox(
-            height: 400,
+            height: 550,
             child: BarChart(
               BarChartData(
                 minY: 0,
