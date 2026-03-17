@@ -21,7 +21,10 @@ class TMenuItem extends StatelessWidget {
     final menuController = SidebarController.instance;
 
     return InkWell(
-      onTap: () => menuController.changeActiveItem(route),
+      onTap: () {
+        menuController.changeActiveItem(route);
+        Navigator.pushNamed(context, route);
+      },
       onHover: (hovering) => hovering
           ? menuController.changeHoverItem(route)
           : menuController.changeHoverItem(''),

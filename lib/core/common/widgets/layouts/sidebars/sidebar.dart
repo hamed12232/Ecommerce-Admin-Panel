@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:yt_ecommerce_admin_panel/core/routes/app_routes.dart';
 
 import '../../../../utils/constants/colors.dart';
 import '../../../../utils/constants/image_strings.dart';
@@ -47,9 +48,13 @@ class TSidebar extends StatelessWidget {
 
                     // Menu Items
                     const TMenuItem(
-                        route: '/',
+                        route: "/",
                         icon: Iconsax.home_1,
                         itemName: 'Dashboard'),
+                    const TMenuItem(
+                        route: AppRoutes.media,
+                        icon: Iconsax.image,
+                        itemName: 'Media'),
                     const TMenuItem(
                         route: '/products',
                         icon: Iconsax.shopping_bag,

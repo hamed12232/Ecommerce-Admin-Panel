@@ -4,6 +4,7 @@ import '../../features/auth/modules/forget_password/view/forget_password_screen.
 import '../../features/auth/modules/login/view/login_screen.dart';
 import '../../features/auth/modules/reset_password/view/reset_password_screen.dart';
 import '../../features/dashboard/screens/dashboard_screen.dart';
+import '../../features/media/screens/media_screen.dart';
 
 class AppRoutes {
   // ── Auth route names ──────────────────────────────────────────
@@ -12,6 +13,7 @@ class AppRoutes {
   static const String resetPassword = '/reset-password';
 
   static const String dashboard = '/dashboard';
+  static const String media = '/media';
   static const String authInitialRoute = login;
   static const String appInitialRoute = dashboard;
 
@@ -35,7 +37,10 @@ class AppRoutes {
   static Route<dynamic> onGenerateAppRoute(RouteSettings settings) {
     switch (settings.name) {
       case dashboard:
+      case '/':
         return _page(const DashboardScreen(), settings);
+      case media:
+        return _page(const MediaScreen(), settings);
       default:
         return _page(const DashboardScreen(), settings);
     }

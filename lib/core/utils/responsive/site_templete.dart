@@ -27,12 +27,12 @@ class SiteTemplete extends StatelessWidget {
             : desktop ?? Container(),
         tablet: useLayout
             ? TabletLayout(
-                body: tablet,
+                body: tablet?? desktop,
               )
             : tablet ?? desktop ?? Container(),
         mobile: useLayout
             ? MobileLayout(
-                body: mobile,
+                body: mobile?? desktop,
               )
             : mobile ?? desktop ?? Container(),
       ),

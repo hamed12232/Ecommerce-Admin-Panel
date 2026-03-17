@@ -19,9 +19,9 @@ class RecentOrdersTable extends StatelessWidget {
           const SizedBox(height: TSizes.spaceBtwSections),
           TPaginatedDataTable(
             minWidth: 700,
-            tableHeight: 400, // Reasonable height for small lists
+            tableHeight: 400, 
             columns: const [
-              DataColumn2(label: Text('Order ID↓↑')), // Or use standard DataColumn
+              DataColumn2(label: Text('Order ID')), 
               DataColumn2(label: Text('Date')),
               DataColumn2(label: Text('Items')),
               DataColumn2(label: Text('Status')),

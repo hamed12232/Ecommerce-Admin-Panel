@@ -1,5 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:yt_ecommerce_admin_panel/core/utils/di/service_locator.dart';
+import 'package:yt_ecommerce_admin_panel/features/personalization/controller/user_cubit.dart';
 import 'package:yt_ecommerce_admin_panel/features/auth/auth_service.dart';
 import 'package:yt_ecommerce_admin_panel/core/routes/app_routes.dart';
 import 'package:yt_ecommerce_admin_panel/core/utils/device/web_material_scroll.dart';
@@ -30,7 +33,8 @@ class AuthGuard extends StatelessWidget {
           );
         }
         final bool isAuthenticated = snapshot.hasData;
-        return MaterialApp(
+
+        final app = MaterialApp(
           key: ValueKey(isAuthenticated),
           themeMode: ThemeMode.system,
           theme: TAppTheme.lightTheme,
@@ -43,6 +47,15 @@ class AuthGuard extends StatelessWidget {
               ? AppRoutes.onGenerateAppRoute
               : AppRoutes.onGenerateAuthRoute,
         );
+
+        if (isAuthenticated) {
+          return BlocProvider(
+            create: (_) => getIt<UserCubit>(),
+            child: app,
+          );
+        }
+
+        return app;
       },
     );
   }
