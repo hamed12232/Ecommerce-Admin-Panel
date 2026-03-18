@@ -6,7 +6,6 @@ import 'package:yt_ecommerce_admin_panel/core/utils/constants/sizes.dart';
 /// "Upload Images" elevated button used in the Media screen header.
 class UploadImagesButton extends StatelessWidget {
   const UploadImagesButton({super.key, required this.onPressed});
-
   final VoidCallback onPressed;
 
   @override
