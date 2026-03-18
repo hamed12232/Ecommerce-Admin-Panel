@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:yt_ecommerce_admin_panel/core/common/widgets/containers/rounded_container.dart';
 import 'package:yt_ecommerce_admin_panel/core/common/widgets/data_table/paginated_data_table.dart';
 import 'package:yt_ecommerce_admin_panel/core/utils/constants/sizes.dart';
-import 'package:yt_ecommerce_admin_panel/features/dashboard/table/table_source.dart';
+import 'package:yt_ecommerce_admin_panel/features/dashboard/presentation/table/table_source.dart';
 
 class RecentOrdersTable extends StatelessWidget {
   const RecentOrdersTable({super.key});

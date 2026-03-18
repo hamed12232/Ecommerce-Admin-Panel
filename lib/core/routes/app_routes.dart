@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import '../../features/auth/modules/forget_password/view/forget_password_screen.dart';
 import '../../features/auth/modules/login/view/login_screen.dart';
 import '../../features/auth/modules/reset_password/view/reset_password_screen.dart';
-import '../../features/dashboard/screens/dashboard_screen.dart';
-import '../../features/media/screens/media_screen.dart';
+import '../../features/dashboard/presentation/screens/dashboard_screen.dart';
+import '../../features/media/presentation/screens/media_screen.dart';
 
 class AppRoutes {
   // ── Auth route names ──────────────────────────────────────────

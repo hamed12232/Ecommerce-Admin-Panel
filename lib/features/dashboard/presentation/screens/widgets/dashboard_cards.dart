@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:yt_ecommerce_admin_panel/core/utils/constants/sizes.dart';
 import 'package:yt_ecommerce_admin_panel/core/utils/device/device_utility.dart';
-import 'package:yt_ecommerce_admin_panel/features/dashboard/screens/widgets/dashboard_card.dart';
+import 'package:yt_ecommerce_admin_panel/features/dashboard/presentation/screens/widgets/dashboard_card.dart';
 
 class TDashboardCards extends StatelessWidget {
   const TDashboardCards({super.key});

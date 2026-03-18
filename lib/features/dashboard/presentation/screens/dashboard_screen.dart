@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:yt_ecommerce_admin_panel/core/utils/responsive/site_templete.dart';
-import 'package:yt_ecommerce_admin_panel/features/dashboard/screens/responsive_screens/dashboard_responsive_screen.dart';
+import 'package:yt_ecommerce_admin_panel/features/dashboard/presentation/screens/responsive_screens/dashboard_responsive_screen.dart';
 
 /// Placeholder dashboard screen — replace with your real dashboard later.
 class DashboardScreen extends StatelessWidget {

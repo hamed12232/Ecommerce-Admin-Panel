@@ -21,7 +21,8 @@ class TBreadcrumbsWithHeading extends StatelessWidget {
   // Flag indicating whether to include a button to return to the previous screen
   final bool returnToPreviousScreen;
 
-  String capitalize(String s) => s.isNotEmpty ? '${s[0].toUpperCase()}${s.substring(1)}' : s;
+  String capitalize(String s) =>
+      s.isNotEmpty ? '${s[0].toUpperCase()}${s.substring(1)}' : s;
 
   @override
   Widget build(BuildContext context) {
@@ -36,9 +37,11 @@ class TBreadcrumbsWithHeading extends StatelessWidget {
               onTap: () => Navigator.pushNamed(context, AppRoutes.dashboard),
               child: Padding(
                 padding: const EdgeInsets.all(TSizes.xs),
-                child: 
-                Text('Dashboard', style: Theme.of(context).textTheme.bodySmall!.apply(fontWeightDelta: -1)),
-              
+                child: Text('Dashboard',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall!
+                        .apply(fontWeightDelta: -1)),
               ),
             ),
 
@@ -48,12 +51,17 @@ class TBreadcrumbsWithHeading extends StatelessWidget {
                   const Text('/'), // Separator
                   InkWell(
                     // Last item should not be clickable
-                    onTap: i == breadcrumbItems.length - 1 ? null : () => Navigator.pushNamed(context, breadcrumbItems[i]),
+                    onTap: i == breadcrumbItems.length - 1
+                        ? null
+                        : () =>
+                            Navigator.pushNamed(context, breadcrumbItems[i]),
                     child: Padding(
                       padding: const EdgeInsets.all(TSizes.xs),
                       child: Text(
                         capitalize(breadcrumbItems[i].replaceAll('/', '')),
-                        style: Theme.of(context).textTheme.bodySmall!.apply(fontWeightDelta: i == breadcrumbItems.length - 1 ? 2 : -1),
+                        style: Theme.of(context).textTheme.bodySmall!.apply(
+                            fontWeightDelta:
+                                i == breadcrumbItems.length - 1 ? 2 : -1),
                       ),
                     ),
                   ),
@@ -67,9 +75,11 @@ class TBreadcrumbsWithHeading extends StatelessWidget {
         Row(
           children: [
             if (returnToPreviousScreen)
-            IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(Iconsax.arrow_left)),
-            if (returnToPreviousScreen) 
-            const SizedBox(width: TSizes.spaceBtwItems),
+              IconButton(
+                  onPressed: () => Navigator.pop(context),
+                  icon: const Icon(Iconsax.arrow_left)),
+            if (returnToPreviousScreen)
+              const SizedBox(width: TSizes.spaceBtwItems),
             TPageHeading(heading: heading),
           ],
         ),

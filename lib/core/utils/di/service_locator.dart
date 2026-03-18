@@ -10,6 +10,13 @@ import 'package:yt_ecommerce_admin_panel/features/auth/domain/usecases/admin_sig
 import 'package:yt_ecommerce_admin_panel/features/auth/domain/usecases/fetch_admin_role_usecase.dart';
 import 'package:yt_ecommerce_admin_panel/features/auth/modules/forget_password/controller/cubit/forget_password_cubit.dart';
 import 'package:yt_ecommerce_admin_panel/features/auth/modules/login/controller/cubit/login_cubit.dart';
+import 'package:yt_ecommerce_admin_panel/features/media/presentation/controller/media_cubit.dart';
+import 'package:yt_ecommerce_admin_panel/features/media/data/data_sources/media_data_source.dart';
+import 'package:yt_ecommerce_admin_panel/features/media/data/repositories/media_repository.dart';
+import 'package:yt_ecommerce_admin_panel/features/media/domain/repositories/base_media_repository.dart';
+import 'package:yt_ecommerce_admin_panel/features/media/domain/usecases/delete_media_image_usecase.dart';
+import 'package:yt_ecommerce_admin_panel/features/media/domain/usecases/fetch_media_images_usecase.dart';
+import 'package:yt_ecommerce_admin_panel/features/media/domain/usecases/upload_media_images_usecase.dart';
 import 'package:yt_ecommerce_admin_panel/features/personalization/controller/user_cubit.dart';
 import 'package:yt_ecommerce_admin_panel/features/personalization/data/datasources/base_user_data_source.dart';
 import 'package:yt_ecommerce_admin_panel/features/personalization/data/datasources/user_data_source.dart';
@@ -29,6 +36,10 @@ Future<void> setupServiceLocator() async {
     () => UserDataSource(),
   );
 
+  getIt.registerLazySingleton<MediaDataSource>(
+    () => MediaDataSource(),
+  );
+
   // ========== Repositories ==========
   getIt.registerLazySingleton<BaseAdminAuthRepository>(
     () => AdminAuthRepository(dataSource: getIt<BaseAdminAuthDataSource>()),
@@ -36,6 +47,10 @@ Future<void> setupServiceLocator() async {
 
   getIt.registerLazySingleton<BaseUserRepository>(
     () => UserRepository(getIt<BaseUserDataSource>()),
+  );
+
+  getIt.registerLazySingleton<BaseMediaRepository>(
+    () => MediaRepository(getIt<MediaDataSource>()),
   );
 
   // ========== Use Cases ==========
@@ -63,6 +78,18 @@ Future<void> setupServiceLocator() async {
     () => FetchUserDetailsUseCase(getIt<BaseUserRepository>()),
   );
 
+  getIt.registerLazySingleton<UploadMediaImagesUseCase>(
+    () => UploadMediaImagesUseCase(getIt<BaseMediaRepository>()),
+  );
+
+  getIt.registerLazySingleton<FetchMediaImagesUseCase>(
+    () => FetchMediaImagesUseCase(getIt<BaseMediaRepository>()),
+  );
+
+  getIt.registerLazySingleton<DeleteMediaImageUseCase>(
+    () => DeleteMediaImageUseCase(getIt<BaseMediaRepository>()),
+  );
+
   // ========== Cubits ==========
   getIt.registerFactory<LoginCubit>(
     () => LoginCubit(
@@ -79,5 +106,13 @@ Future<void> setupServiceLocator() async {
 
   getIt.registerFactory<UserCubit>(
     () => UserCubit(getIt<FetchUserDetailsUseCase>()),
+  );
+
+  getIt.registerFactory<MediaCubit>(
+    () => MediaCubit(
+      uploadUseCase: getIt<UploadMediaImagesUseCase>(),
+      fetchUseCase: getIt<FetchMediaImagesUseCase>(),
+      deleteUseCase: getIt<DeleteMediaImageUseCase>(),
+    ),
   );
 }

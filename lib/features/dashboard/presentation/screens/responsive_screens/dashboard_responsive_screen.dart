@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:yt_ecommerce_admin_panel/core/utils/constants/sizes.dart';
 import 'package:yt_ecommerce_admin_panel/core/utils/device/device_utility.dart';
-import 'package:yt_ecommerce_admin_panel/features/dashboard/screens/widgets/dashboard_cards.dart';
-import 'package:yt_ecommerce_admin_panel/features/dashboard/screens/widgets/order_status_pie_chart.dart';
-import 'package:yt_ecommerce_admin_panel/features/dashboard/screens/widgets/recent_orders_table.dart';
-import 'package:yt_ecommerce_admin_panel/features/dashboard/screens/widgets/weekly_sales_graph.dart';
+import 'package:yt_ecommerce_admin_panel/features/dashboard/presentation/screens/widgets/dashboard_cards.dart';
+import 'package:yt_ecommerce_admin_panel/features/dashboard/presentation/screens/widgets/order_status_pie_chart.dart';
+import 'package:yt_ecommerce_admin_panel/features/dashboard/presentation/screens/widgets/recent_orders_table.dart';
+import 'package:yt_ecommerce_admin_panel/features/dashboard/presentation/screens/widgets/weekly_sales_graph.dart';
 
 class DashboardResponsiveScreen extends StatelessWidget {
   const DashboardResponsiveScreen({super.key});
