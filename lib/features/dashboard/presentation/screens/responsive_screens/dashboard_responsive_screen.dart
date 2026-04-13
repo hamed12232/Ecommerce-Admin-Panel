@@ -5,6 +5,7 @@ import 'package:yt_ecommerce_admin_panel/features/dashboard/presentation/screens
 import 'package:yt_ecommerce_admin_panel/features/dashboard/presentation/screens/widgets/order_status_pie_chart.dart';
 import 'package:yt_ecommerce_admin_panel/features/dashboard/presentation/screens/widgets/recent_orders_table.dart';
 import 'package:yt_ecommerce_admin_panel/features/dashboard/presentation/screens/widgets/weekly_sales_graph.dart';
+import 'package:yt_ecommerce_admin_panel/features/media/presentation/widgets/media_image_picker.dart';
 
 class DashboardResponsiveScreen extends StatelessWidget {
   const DashboardResponsiveScreen({super.key});
@@ -19,6 +20,12 @@ class DashboardResponsiveScreen extends StatelessWidget {
           children: [
             const Text('Dashboard',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+            TextButton(
+              onPressed: () async {
+                await MediaImagePicker.show(context: context);
+              },
+              child: const Text("show sheet"),
+            ),
             const SizedBox(height: TSizes.spaceBtwSections),
             const TDashboardCards(),
             const SizedBox(height: TSizes.spaceBtwSections),
@@ -29,16 +36,13 @@ class DashboardResponsiveScreen extends StatelessWidget {
                 if (TDeviceUtils.isDesktopScreen(context))
                   const SizedBox(width: TSizes.spaceBtwSections),
                 if (TDeviceUtils.isDesktopScreen(context))
-                  const Expanded(
-                      child: OrderStatusPieChart()
-                  ),
+                  const Expanded(child: OrderStatusPieChart()),
               ],
             ),
             if (!TDeviceUtils.isDesktopScreen(context))
               const SizedBox(height: TSizes.spaceBtwSections),
             if (!TDeviceUtils.isDesktopScreen(context))
               const OrderStatusPieChart(),
-            
             const SizedBox(height: TSizes.spaceBtwSections),
             const RecentOrdersTable(),
           ],

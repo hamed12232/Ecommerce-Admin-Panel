@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import '../../features/auth/modules/forget_password/view/forget_password_screen.dart';
 import '../../features/auth/modules/login/view/login_screen.dart';
 import '../../features/auth/modules/reset_password/view/reset_password_screen.dart';
+import '../../features/category/data/models/category_model.dart';
+import '../../features/category/presentation/screens/category_screen.dart';
+import '../../features/category/presentation/screens/create_category_screen.dart';
 import '../../features/dashboard/presentation/screens/dashboard_screen.dart';
 import '../../features/media/presentation/screens/media_screen.dart';
 
@@ -14,6 +17,9 @@ class AppRoutes {
 
   static const String dashboard = '/dashboard';
   static const String media = '/media';
+  static const String categories = '/categories';
+  static const String createCategory = '/categories/create';
+  static const String editCategory = '/categories/edit';
   static const String authInitialRoute = login;
   static const String appInitialRoute = dashboard;
 
@@ -41,6 +47,13 @@ class AppRoutes {
         return _page(const DashboardScreen(), settings);
       case media:
         return _page(const MediaScreen(), settings);
+      case categories:
+        return _page(const CategoryScreen(), settings);
+      case createCategory:
+        return _page(const CreateCategoryScreen(), settings);
+      case editCategory:
+        final category = settings.arguments as CategoryModel;
+        return _page(CreateCategoryScreen(category: category), settings);
       default:
         return _page(const DashboardScreen(), settings);
     }

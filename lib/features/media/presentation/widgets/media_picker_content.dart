@@ -56,24 +56,10 @@ class _MediaPickerContentState extends State<MediaPickerContent> {
       builder: (context, state) {
         return Column(
           children: [
-            // ── Drag Handle ───────────────────────────────
-            Center(
-              child: Container(
-                margin: const EdgeInsets.only(top: TSizes.sm),
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: TColors.darkGrey,
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-            ),
-            const SizedBox(height: TSizes.sm),
-
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: TSizes.defaultSpace),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: TSizes.defaultSpace),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -109,9 +95,8 @@ class _MediaPickerContentState extends State<MediaPickerContent> {
                             child: ElevatedButton(
                               onPressed: state.isUploading
                                   ? null
-                                  : () => context
-                                      .read<MediaCubit>()
-                                      .uploadImages(),
+                                  : () =>
+                                      context.read<MediaCubit>().uploadImages(),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: TColors.primary,
                                 foregroundColor: Colors.white,
@@ -123,8 +108,7 @@ class _MediaPickerContentState extends State<MediaPickerContent> {
                                       width: 18,
                                       height: 18,
                                       child: CircularProgressIndicator(
-                                          strokeWidth: 2,
-                                          color: Colors.white),
+                                          strokeWidth: 2, color: Colors.white),
                                     )
                                   : const Text('Upload'),
                             ),
@@ -149,16 +133,14 @@ class _MediaPickerContentState extends State<MediaPickerContent> {
                         const Spacer(),
                         OutlinedButton.icon(
                           onPressed: () => Navigator.of(context).pop(),
-                          icon:
-                              const Icon(Iconsax.close_circle, size: 18),
+                          icon: const Icon(Iconsax.close_circle, size: 18),
                           label: const Text('Close'),
                           style: OutlinedButton.styleFrom(
                             foregroundColor: TColors.darkGrey,
-                            side: const BorderSide(
-                                color: TColors.borderPrimary),
+                            side:
+                                const BorderSide(color: TColors.borderPrimary),
                             padding: const EdgeInsets.symmetric(
-                                horizontal: TSizes.md,
-                                vertical: TSizes.sm),
+                                horizontal: TSizes.md, vertical: TSizes.sm),
                           ),
                         ),
                         const SizedBox(width: TSizes.sm),
@@ -179,8 +161,7 @@ class _MediaPickerContentState extends State<MediaPickerContent> {
                             disabledBackgroundColor: TColors.buttonDisabled,
                             disabledForegroundColor: Colors.white70,
                             padding: const EdgeInsets.symmetric(
-                                horizontal: TSizes.md,
-                                vertical: TSizes.sm),
+                                horizontal: TSizes.md, vertical: TSizes.sm),
                           ),
                         ),
                       ],
