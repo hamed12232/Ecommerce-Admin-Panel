@@ -37,6 +37,7 @@ class MediaCubit extends Cubit<MediaState> {
       images: [],
       currentOffset: 0,
       canLoadMore: true,
+      status: MediaStatus.loading,
     ));
     loadImages();
   }
@@ -44,7 +45,9 @@ class MediaCubit extends Cubit<MediaState> {
   // ─── Load Images (initial + pagination) ────────────────────────
 
   Future<void> loadImages() async {
-    emit(state.copyWith(status: MediaStatus.loading));
+    if (state.status != MediaStatus.loading) {
+      emit(state.copyWith(status: MediaStatus.loading));
+    }
 
     final result = await _fetchUseCase(
       folder: _bucketFolder,

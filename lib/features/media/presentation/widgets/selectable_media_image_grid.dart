@@ -7,35 +7,47 @@ import 'package:yt_ecommerce_admin_panel/core/utils/constants/image_strings.dart
 import 'package:yt_ecommerce_admin_panel/core/utils/constants/sizes.dart';
 import 'package:yt_ecommerce_admin_panel/features/media/presentation/controller/media_cubit.dart';
 import 'package:yt_ecommerce_admin_panel/features/media/presentation/controller/media_state.dart';
-import 'package:yt_ecommerce_admin_panel/features/media/presentation/widgets/image_tile.dart';
+import 'package:yt_ecommerce_admin_panel/features/media/presentation/widgets/selectable_image_tile.dart';
 
-/// Responsive grid displaying images from the selected Supabase folder.
-class MediaImageGrid extends StatelessWidget {
-  const MediaImageGrid({super.key});
+/// Grid that displays images with selectable checkboxes for the media picker.
+class SelectableMediaImageGrid extends StatelessWidget {
+  const SelectableMediaImageGrid({
+    super.key,
+    required this.selectedUrls,
+    required this.onToggle,
+    this.allowMultiple = true,
+  });
+
+  final Set<String> selectedUrls;
+  final void Function(String url) onToggle;
+  final bool allowMultiple;
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<MediaCubit, MediaState>(
       builder: (context, state) {
-        if (state.status == MediaStatus.loading ) {
+        // ── Loading ──────────────────────────────────
+        if (state.status == MediaStatus.loading && state.images.isEmpty) {
           return Center(
             child: Lottie.asset(
               TImages.defaultLoaderAnimation,
-              height: 200,
-              width: 200,
+              height: 150,
+              width: 150,
             ),
           );
         }
 
-        if (state.status == MediaStatus.error ) {
+        // ── Error ────────────────────────────────────
+        if (state.status == MediaStatus.error && state.images.isEmpty) {
           return Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 const Icon(Iconsax.warning_2,
-                    size: 48, color: TColors.darkGrey),
+                    size: 40, color: TColors.darkGrey),
                 const SizedBox(height: TSizes.sm),
-                Text(state.error ?? 'Something went wrong'),
+                Text(state.error ?? 'Something went wrong',
+                    style: Theme.of(context).textTheme.bodyMedium),
                 const SizedBox(height: TSizes.sm),
                 TextButton(
                   onPressed: () => context.read<MediaCubit>().loadImages(),
@@ -46,18 +58,20 @@ class MediaImageGrid extends StatelessWidget {
           );
         }
 
+        // ── Empty ────────────────────────────────────
         if (state.images.isEmpty) {
           return Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Iconsax.image, size: 48, color: TColors.darkGrey),
+                const Icon(Iconsax.image,
+                    size: 40, color: TColors.darkGrey),
                 const SizedBox(height: TSizes.sm),
                 Text(
-                  'No images found in ${state.selectedFolder}',
+                  'No images in ${state.selectedFolder}',
                   style: Theme.of(context)
                       .textTheme
-                      .bodyLarge
+                      .bodyMedium
                       ?.copyWith(color: TColors.darkGrey),
                 ),
               ],
@@ -65,14 +79,14 @@ class MediaImageGrid extends StatelessWidget {
           );
         }
 
+        // ── Grid + Load More ─────────────────────────
         return Column(
           children: [
-            // ── Image Grid ─────────────────────────────
             GridView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 160,
+                maxCrossAxisExtent: 140,
                 mainAxisSpacing: TSizes.spaceBtwItems,
                 crossAxisSpacing: TSizes.spaceBtwItems,
                 childAspectRatio: 0.85,
@@ -80,13 +94,15 @@ class MediaImageGrid extends StatelessWidget {
               itemCount: state.images.length,
               itemBuilder: (context, index) {
                 final image = state.images[index];
-                return ImageTile(image: image);
+                return SelectableImageTile(
+                  image: image,
+                  isSelected: selectedUrls.contains(image.url),
+                  onToggle: () => onToggle(image.url),
+                );
               },
             ),
-
-            // ── Load More ──────────────────────────────
             if (state.canLoadMore) ...[
-              const SizedBox(height: TSizes.spaceBtwSections),
+              const SizedBox(height: TSizes.spaceBtwItems),
               Center(
                 child: ElevatedButton.icon(
                   onPressed: () => context.read<MediaCubit>().loadMore(),
