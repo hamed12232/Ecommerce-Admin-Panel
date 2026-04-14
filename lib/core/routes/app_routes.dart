@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import '../../features/auth/modules/forget_password/view/forget_password_screen.dart';
 import '../../features/auth/modules/login/view/login_screen.dart';
 import '../../features/auth/modules/reset_password/view/reset_password_screen.dart';
+import '../../features/banner/data/models/banner_model.dart';
+import '../../features/banner/presentation/screens/banner_screen.dart';
+import '../../features/banner/presentation/screens/create_banner_screen.dart';
 import '../../features/brand/data/models/brand_model.dart';
 import '../../features/brand/presentation/screens/brand_screen.dart';
 import '../../features/brand/presentation/screens/create_brand_screen.dart';
@@ -26,7 +29,10 @@ class AppRoutes {
   static const String brands = '/brands';
   static const String createBrand = '/brands/create';
   static const String editBrand = '/brands/edit';
-  
+  static const String banners = '/banners';
+  static const String createBanner = '/banners/create';
+  static const String editBanner = '/banners/edit';
+
   static const String authInitialRoute = login;
   static const String appInitialRoute = dashboard;
 
@@ -68,6 +74,13 @@ class AppRoutes {
       case editBrand:
         final brand = settings.arguments as BrandModel;
         return _page(CreateBrandScreen(brand: brand), settings);
+      case banners:
+        return _page(const BannerScreen(), settings);
+      case createBanner:
+        return _page(const CreateBannerScreen(), settings);
+      case editBanner:
+        final banner = settings.arguments as BannerModel;
+        return _page(CreateBannerScreen(banner: banner), settings);
       default:
         return _page(const DashboardScreen(), settings);
     }

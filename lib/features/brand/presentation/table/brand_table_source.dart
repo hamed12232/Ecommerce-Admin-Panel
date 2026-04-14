@@ -1,6 +1,7 @@
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:yt_ecommerce_admin_panel/core/common/widgets/chips/rounded_choice_chips.dart';
 import 'package:yt_ecommerce_admin_panel/core/common/widgets/images/t_rounded_image.dart';
 import 'package:yt_ecommerce_admin_panel/core/routes/app_routes.dart';
 import 'package:yt_ecommerce_admin_panel/core/utils/constants/colors.dart';
@@ -60,14 +61,20 @@ class BrandRows extends DataTableSource {
 
         // ── Categories ──────────────────────────
         DataCell(
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: TSizes.sm),
-            child: Text(
-              brand.categories.isEmpty ? '—' : brand.categories.join(', '),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
+          brand.categories.isEmpty
+              ? const Text('—')
+              : Wrap(
+                  spacing: 4,
+                  runSpacing: 4,
+                  children: brand.categories
+                      .map((cat) => TChoiceChip(
+                            text: cat,
+                            selected: false,
+                            onSelected: null,
+                          
+                          ))
+                      .toList(),
+                ),
         ),
 
         // ── Featured ─────────────────────────────────
