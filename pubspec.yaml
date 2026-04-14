@@ -51,6 +51,7 @@ flutter:
 
   #--------------- LOCAL ASSETS ------------------#
   assets:
+    - .env
     - assets/logos/
     - assets/images/content/
     - assets/images/animations/
