@@ -53,6 +53,7 @@ flutter:
   assets:
     - .env
     - assets/logos/
+    - assets/images/products/
     - assets/images/content/
     - assets/images/animations/
     - assets/icons/payment_methods/

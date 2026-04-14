@@ -14,6 +14,9 @@ import '../../features/category/presentation/screens/category_screen.dart';
 import '../../features/category/presentation/screens/create_category_screen.dart';
 import '../../features/dashboard/presentation/screens/dashboard_screen.dart';
 import '../../features/media/presentation/screens/media_screen.dart';
+import '../../features/product/data/models/product_model.dart';
+import '../../features/product/presentation/screens/product_screen.dart';
+import '../../features/product/presentation/screens/create_product_screen.dart';
 
 class AppRoutes {
   // ── Auth route names ──────────────────────────────────────────
@@ -32,6 +35,9 @@ class AppRoutes {
   static const String banners = '/banners';
   static const String createBanner = '/banners/create';
   static const String editBanner = '/banners/edit';
+  static const String products = '/products';
+  static const String createProduct = '/products/create';
+  static const String editProduct = '/products/edit';
 
   static const String authInitialRoute = login;
   static const String appInitialRoute = dashboard;
@@ -81,6 +87,13 @@ class AppRoutes {
       case editBanner:
         final banner = settings.arguments as BannerModel;
         return _page(CreateBannerScreen(banner: banner), settings);
+      case products:
+        return _page(const ProductScreen(), settings);
+      case createProduct:
+        return _page(const CreateProductScreen(), settings);
+      case editProduct:
+        final product = settings.arguments as ProductModel;
+        return _page(CreateProductScreen(product: product), settings);
       default:
         return _page(const DashboardScreen(), settings);
     }

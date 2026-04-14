@@ -56,7 +56,7 @@ class TSidebar extends StatelessWidget {
                         icon: Iconsax.image,
                         itemName: 'Media'),
                     const TMenuItem(
-                        route: "/products",
+                        route: AppRoutes.products,
                         icon: Iconsax.shopping_bag,
                         itemName: 'Products'),
                     const TMenuItem(

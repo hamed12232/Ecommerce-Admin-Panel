@@ -202,6 +202,7 @@ class _CreateBannerContentState extends State<CreateBannerContent> {
           ),
         ),
       ],
+      
     );
   }
 }
