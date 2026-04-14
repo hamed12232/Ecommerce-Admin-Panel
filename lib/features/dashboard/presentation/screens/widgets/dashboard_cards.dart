@@ -11,7 +11,6 @@ class TDashboardCards extends StatelessWidget {
     final isTablet = TDeviceUtils.isTabletScreen(context);
     final isDesktop = TDeviceUtils.isDesktopScreen(context);
 
-
     // Common list of cards
     final List<Widget> cards = [
       TDashboardCard(
@@ -42,7 +41,12 @@ class TDashboardCards extends StatelessWidget {
 
     if (isDesktop) {
       return Row(
-        children: cards.map((card) => Expanded(child: Padding(padding: const EdgeInsets.only(right: TSizes.spaceBtwItems), child: card))).toList(),
+        children: cards
+            .map((card) => Expanded(
+                child: Padding(
+                    padding: const EdgeInsets.only(right: TSizes.spaceBtwItems),
+                    child: card)))
+            .toList(),
       );
     } else if (isTablet) {
       return Column(
@@ -67,7 +71,11 @@ class TDashboardCards extends StatelessWidget {
     } else {
       // Mobile
       return Column(
-        children: cards.map((card) => Padding(padding: const EdgeInsets.only(bottom: TSizes.spaceBtwItems), child: card)).toList(),
+        children: cards
+            .map((card) => Padding(
+                padding: const EdgeInsets.only(bottom: TSizes.spaceBtwItems),
+                child: card))
+            .toList(),
       );
     }
   }
