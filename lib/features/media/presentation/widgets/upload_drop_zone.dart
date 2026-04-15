@@ -31,7 +31,7 @@ class _UploadDropZoneState extends State<UploadDropZone> {
     return Container(
       decoration: BoxDecoration(
         color: _isHighlighted
-            ? TColors.primary.withOpacity(0.05)
+            ? TColors.primary.withValues(alpha: 0.05)
             : TColors.lightGrey,
         borderRadius: BorderRadius.circular(TSizes.borderRadiusMd),
         border: Border.all(

@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:yt_ecommerce_admin_panel/core/common/widgets/containers/rounded_container.dart';
 import 'package:yt_ecommerce_admin_panel/core/utils/constants/colors.dart';
+import 'package:yt_ecommerce_admin_panel/core/utils/constants/image_strings.dart';
 import 'package:yt_ecommerce_admin_panel/core/utils/constants/sizes.dart';
 import 'package:yt_ecommerce_admin_panel/features/product/data/models/product_model.dart';
+import 'package:yt_ecommerce_admin_panel/features/product/presentation/widgets/segment_button.dart';
 
 class ProductStockPricingCard extends StatefulWidget {
   final TProductType productType;
@@ -48,14 +50,18 @@ class _ProductStockPricingCardState extends State<ProductStockPricingCard> {
           const SizedBox(height: TSizes.spaceBtwItems),
 
           // Product Type Toggle
-          Row(
-            children: [
-              Text('Product Type  ',
-                  style: Theme.of(context).textTheme.bodyMedium),
-              _buildRadio('Single', TProductType.single),
-              const SizedBox(width: TSizes.sm),
-              _buildRadio('Variable', TProductType.variable),
+          Text('Product Type', style: Theme.of(context).textTheme.bodyMedium),
+          const SizedBox(height: TSizes.sm),
+          SegmentButton<TProductType>(
+            selected: {widget.productType},
+            segments: const [
+              ButtonSegment(value: TProductType.single, label: Text('Single')),
+              ButtonSegment(
+                  value: TProductType.variable, label: Text('Variable')),
             ],
+            onSelectionChanged: (selected) {
+              widget.onProductTypeChanged(selected.first);
+            },
           ),
           const SizedBox(height: TSizes.spaceBtwItems),
 
@@ -151,8 +157,8 @@ class _ProductStockPricingCardState extends State<ProductStockPricingCard> {
               ),
               child: Column(
                 children: [
-                  Icon(Iconsax.color_swatch,
-                      size: 60, color: TColors.darkGrey.withOpacity(0.5)),
+                  Image.asset(TImages.defaultAttributeColorsImageIcon,
+                      height: 80, width: 80),
                   const SizedBox(height: TSizes.sm),
                   const Text('There are no attributes added for this product',
                       style: TextStyle(color: TColors.darkGrey)),
@@ -193,23 +199,6 @@ class _ProductStockPricingCardState extends State<ProductStockPricingCard> {
                 ),
         ],
       ),
-    );
-  }
-
-  Widget _buildRadio(String label, TProductType type) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Radio<TProductType>(
-          value: type,
-          groupValue: widget.productType,
-          activeColor: TColors.primary,
-          onChanged: (v) {
-            if (v != null) widget.onProductTypeChanged(v);
-          },
-        ),
-        Text(label),
-      ],
     );
   }
 }

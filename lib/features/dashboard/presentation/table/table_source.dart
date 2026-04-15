@@ -43,7 +43,7 @@ class OrderRows extends DataTableSource {
           TRoundedContainer(
             radius: TSizes.cardRadiusSm,
             padding: const EdgeInsets.symmetric(vertical: TSizes.xs, horizontal: TSizes.md),
-            backgroundColor: THelperFunctions.getOrderStatusColor(order.status).withOpacity(0.1),
+            backgroundColor: THelperFunctions.getOrderStatusColor(order.status).withValues(alpha: 0.1),
             child: Text(
               order.status.name.replaceFirst(order.status.name[0], order.status.name[0].toUpperCase()),
               style: TextStyle(color: THelperFunctions.getOrderStatusColor(order.status)),

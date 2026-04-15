@@ -23,16 +23,19 @@ class ProductRows extends DataTableSource {
 
     switch (columnIndex) {
       case 0: // Product name
-        products.sort((a, b) =>
-            ascending ? a.title.compareTo(b.title) : b.title.compareTo(a.title));
+        products.sort((a, b) => ascending
+            ? a.title.compareTo(b.title)
+            : b.title.compareTo(a.title));
         break;
       case 1: // Stock
-        products.sort((a, b) =>
-            ascending ? a.stock.compareTo(b.stock) : b.stock.compareTo(a.stock));
+        products.sort((a, b) => ascending
+            ? a.stock.compareTo(b.stock)
+            : b.stock.compareTo(a.stock));
         break;
       case 3: // Price
-        products.sort((a, b) =>
-            ascending ? a.price.compareTo(b.price) : b.price.compareTo(a.price));
+        products.sort((a, b) => ascending
+            ? a.price.compareTo(b.price)
+            : b.price.compareTo(a.price));
         break;
     }
     notifyListeners();
@@ -109,6 +112,9 @@ class ProductRows extends DataTableSource {
               Expanded(
                 child: Text(
                   product.brand,
+                  style: Theme.of(context).textTheme.bodyMedium!.apply(
+                        color: TColors.primary,
+                      ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -133,7 +139,8 @@ class ProductRows extends DataTableSource {
                   AppRoutes.editProduct,
                   arguments: product,
                 ),
-                icon: const Icon(Iconsax.edit, color: TColors.primary, size: 20),
+                icon:
+                    const Icon(Iconsax.edit, color: TColors.primary, size: 20),
               ),
               IconButton(
                 onPressed: () {

@@ -158,7 +158,7 @@ class _CreateBannerContentState extends State<CreateBannerContent> {
             decoration: BoxDecoration(
               color: TColors.primaryBackground,
               borderRadius: BorderRadius.circular(TSizes.borderRadiusMd),
-              border: Border.all(color: TColors.grey.withOpacity(0.5)),
+              border: Border.all(color: TColors.grey.withValues(alpha: 0.5)),
             ),
             child: _imageUrl != null && _imageUrl!.isNotEmpty
                 ? TRoundedImage(

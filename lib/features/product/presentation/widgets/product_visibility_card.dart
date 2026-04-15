@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:yt_ecommerce_admin_panel/core/common/widgets/containers/rounded_container.dart';
-import 'package:yt_ecommerce_admin_panel/core/utils/constants/colors.dart';
 import 'package:yt_ecommerce_admin_panel/core/utils/constants/sizes.dart';
+import 'package:yt_ecommerce_admin_panel/features/product/presentation/widgets/segment_button.dart';
 
 class ProductVisibilityCard extends StatelessWidget {
   final bool isPublished;
@@ -21,25 +21,15 @@ class ProductVisibilityCard extends StatelessWidget {
         children: [
           Text('Visibility', style: Theme.of(context).textTheme.headlineSmall),
           const SizedBox(height: TSizes.sm),
-          RadioListTile<bool>(
-            value: true,
-            groupValue: isPublished,
-            title: const Text('Published'),
-            onChanged: (v) {
-              if (v != null) onVisibilityChanged(v);
+          SegmentButton<bool>(
+            selected: {isPublished},
+            segments: const [
+              ButtonSegment(value: true, label: Text('Published')),
+              ButtonSegment(value: false, label: Text('Hidden')),
+            ],
+            onSelectionChanged: (selected) {
+              onVisibilityChanged(selected.first);
             },
-            activeColor: TColors.primary,
-            contentPadding: EdgeInsets.zero,
-          ),
-          RadioListTile<bool>(
-            value: false,
-            groupValue: isPublished,
-            title: const Text('Hidden'),
-            onChanged: (v) {
-              if (v != null) onVisibilityChanged(v);
-            },
-            activeColor: TColors.primary,
-            contentPadding: EdgeInsets.zero,
           ),
         ],
       ),

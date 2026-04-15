@@ -29,7 +29,7 @@ class ProductCategoriesCard extends StatelessWidget {
           Text('Categories', style: Theme.of(context).textTheme.headlineSmall),
           const SizedBox(height: TSizes.spaceBtwItems),
           DropdownButtonFormField<String>(
-            value: null,
+            initialValue: null,
             decoration: const InputDecoration(
               hintText: 'Select Categories',
               prefixIcon: Icon(Iconsax.arrow_down),

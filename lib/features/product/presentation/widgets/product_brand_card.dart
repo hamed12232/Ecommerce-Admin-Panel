@@ -23,7 +23,7 @@ class ProductBrandCard extends StatelessWidget {
           Text('Brand', style: Theme.of(context).textTheme.headlineSmall),
           const SizedBox(height: TSizes.spaceBtwItems),
           DropdownButtonFormField<String>(
-            value: selectedBrand.isEmpty ? null : selectedBrand,
+            initialValue: selectedBrand.isEmpty ? null : selectedBrand,
             decoration: const InputDecoration(
               hintText: 'Select Brand',
               prefixIcon: Icon(Iconsax.setting_4),

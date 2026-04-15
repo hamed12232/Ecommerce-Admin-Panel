@@ -2,7 +2,6 @@ import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:yt_ecommerce_admin_panel/core/common/widgets/breadcrumbs/breadcrumb_with_heading.dart';
-import 'package:yt_ecommerce_admin_panel/core/common/widgets/containers/rounded_container.dart';
 import 'package:yt_ecommerce_admin_panel/core/common/widgets/data_table/paginated_data_table.dart';
 import 'package:yt_ecommerce_admin_panel/core/routes/app_routes.dart';
 import 'package:yt_ecommerce_admin_panel/core/utils/constants/colors.dart';
@@ -84,44 +83,40 @@ class _ProductsListContentState extends State<ProductsListContent> {
               const SizedBox(height: TSizes.spaceBtwSections),
 
               // ── Data Table ───────────────────────────────
-              TRoundedContainer(
-                child: TPaginatedDataTable(
-                  minWidth: 900,
-                  tableHeight: 760,
-                  sortColumnIndex: _sortColumnIndex,
-                  sortAscending: _sortAscending,
-                  columns: [
-                    DataColumn2(
-                      label: const Text('Product'),
-                      size: ColumnSize.L,
-                      onSort: _onSort,
-                    ),
-                    DataColumn2(
-                      label: const Text('Stock'),
-                      fixedWidth: 100,
-                      numeric: true,
-                      onSort: _onSort,
-                    ),
-                    const DataColumn2(
-                      label: Text('Brand'),
-                      size: ColumnSize.M,
-                    ),
-                    DataColumn2(
-                      label: const Text('Price'),
-                      fixedWidth: 140,
-                      onSort: _onSort,
-                    ),
-                    const DataColumn2(
-                      label: Text('Date'),
-                      fixedWidth: 160,
-                    ),
-                    const DataColumn2(
-                      label: Text('Action'),
-                      fixedWidth: 100,
-                    ),
-                  ],
-                  source: _dataSource,
-                ),
+              TPaginatedDataTable(
+                minWidth: 900,
+                tableHeight: 760,
+                sortColumnIndex: _sortColumnIndex,
+                sortAscending: _sortAscending,
+                columns: [
+                  DataColumn2(
+                    label: const Text('Product'),
+                    size: ColumnSize.L,
+                    onSort: _onSort,
+                  ),
+                  DataColumn2(
+                    label: const Text('Stock'),
+                    onSort: _onSort,
+                  ),
+                  const DataColumn2(
+                    label: Text('Brand'),
+                    size: ColumnSize.M,
+                  ),
+                  DataColumn2(
+                    label: const Text('Price'),
+                    fixedWidth: 140,
+                    onSort: _onSort,
+                  ),
+                  const DataColumn2(
+                    label: Text('Date'),
+                    fixedWidth: 160,
+                  ),
+                  const DataColumn2(
+                    label: Text('Action'),
+                    fixedWidth: 100,
+                  ),
+                ],
+                source: _dataSource,
               ),
             ],
           ),
@@ -157,8 +152,7 @@ class _ProductsListContentState extends State<ProductsListContent> {
     return SizedBox(
       width: 200,
       child: ElevatedButton.icon(
-        onPressed: () =>
-            Navigator.pushNamed(context, AppRoutes.createProduct),
+        onPressed: () => Navigator.pushNamed(context, AppRoutes.createProduct),
         icon: const Icon(Iconsax.add, size: 20),
         label: const Text('Add Product'),
         style: ElevatedButton.styleFrom(
