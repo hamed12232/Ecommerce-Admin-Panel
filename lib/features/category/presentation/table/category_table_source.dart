@@ -1,5 +1,6 @@
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:yt_ecommerce_admin_panel/core/common/widgets/images/t_rounded_image.dart';
 import 'package:yt_ecommerce_admin_panel/core/routes/app_routes.dart';
@@ -7,6 +8,7 @@ import 'package:yt_ecommerce_admin_panel/core/utils/constants/colors.dart';
 import 'package:yt_ecommerce_admin_panel/core/utils/constants/enums.dart';
 import 'package:yt_ecommerce_admin_panel/core/utils/constants/sizes.dart';
 import 'package:yt_ecommerce_admin_panel/features/category/data/models/category_model.dart';
+import 'package:yt_ecommerce_admin_panel/features/category/presentation/cubit/category_cubit.dart';
 
 class CategoryRows extends DataTableSource {
   final BuildContext context;
@@ -88,7 +90,7 @@ class CategoryRows extends DataTableSource {
               ),
               IconButton(
                 onPressed: () {
-                  // TODO: Implement delete functionality
+                  context.read<CategoryCubit>().deleteCategory(category.id);
                 },
                 icon: const Icon(Iconsax.trash, color: TColors.error),
               ),

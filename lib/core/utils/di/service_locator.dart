@@ -10,6 +10,15 @@ import 'package:yt_ecommerce_admin_panel/features/auth/domain/usecases/admin_sig
 import 'package:yt_ecommerce_admin_panel/features/auth/domain/usecases/fetch_admin_role_usecase.dart';
 import 'package:yt_ecommerce_admin_panel/features/auth/modules/forget_password/controller/cubit/forget_password_cubit.dart';
 import 'package:yt_ecommerce_admin_panel/features/auth/modules/login/controller/cubit/login_cubit.dart';
+import 'package:yt_ecommerce_admin_panel/features/banner/data/datasources/banner_data_source.dart';
+import 'package:yt_ecommerce_admin_panel/features/banner/data/repositories/banner_repository.dart';
+import 'package:yt_ecommerce_admin_panel/features/banner/presentation/cubit/banner_cubit.dart';
+import 'package:yt_ecommerce_admin_panel/features/brand/data/datasources/brand_data_source.dart';
+import 'package:yt_ecommerce_admin_panel/features/brand/data/repositories/brand_repository.dart';
+import 'package:yt_ecommerce_admin_panel/features/brand/presentation/cubit/brand_cubit.dart';
+import 'package:yt_ecommerce_admin_panel/features/category/data/datasources/category_data_source.dart';
+import 'package:yt_ecommerce_admin_panel/features/category/data/repositories/category_repository.dart';
+import 'package:yt_ecommerce_admin_panel/features/category/presentation/cubit/category_cubit.dart';
 import 'package:yt_ecommerce_admin_panel/features/media/presentation/controller/media_cubit.dart';
 import 'package:yt_ecommerce_admin_panel/features/media/data/data_sources/media_data_source.dart';
 import 'package:yt_ecommerce_admin_panel/features/media/data/repositories/media_repository.dart';
@@ -23,6 +32,9 @@ import 'package:yt_ecommerce_admin_panel/features/personalization/data/datasourc
 import 'package:yt_ecommerce_admin_panel/features/personalization/data/repositories/user_repository_impl.dart';
 import 'package:yt_ecommerce_admin_panel/features/personalization/domain/repositories/base_user_repository.dart';
 import 'package:yt_ecommerce_admin_panel/features/personalization/domain/usecases/fetch_user_details_usecase.dart';
+import 'package:yt_ecommerce_admin_panel/features/product/data/datasources/product_data_source.dart';
+import 'package:yt_ecommerce_admin_panel/features/product/data/repositories/product_repository.dart';
+import 'package:yt_ecommerce_admin_panel/features/product/presentation/cubit/product_cubit.dart';
 
 final getIt = GetIt.instance;
 
@@ -38,6 +50,38 @@ Future<void> setupServiceLocator() async {
 
   getIt.registerLazySingleton<MediaDataSource>(
     () => MediaDataSource(),
+  );
+
+  // ========== Category ==========
+  getIt.registerLazySingleton<CategoryDataSource>(
+    () => CategoryDataSource(),
+  );
+  getIt.registerLazySingleton<CategoryRepository>(
+    () => CategoryRepository(dataSource: getIt<CategoryDataSource>()),
+  );
+
+  // ========== Banner ==========
+  getIt.registerLazySingleton<BannerDataSource>(
+    () => BannerDataSource(),
+  );
+  getIt.registerLazySingleton<BannerRepository>(
+    () => BannerRepository(dataSource: getIt<BannerDataSource>()),
+  );
+
+  // ========== Brand ==========
+  getIt.registerLazySingleton<BrandDataSource>(
+    () => BrandDataSource(),
+  );
+  getIt.registerLazySingleton<BrandRepository>(
+    () => BrandRepository(dataSource: getIt<BrandDataSource>()),
+  );
+
+  // ========== Product ==========
+  getIt.registerLazySingleton<ProductDataSource>(
+    () => ProductDataSource(),
+  );
+  getIt.registerLazySingleton<ProductRepository>(
+    () => ProductRepository(dataSource: getIt<ProductDataSource>()),
   );
 
   // ========== Repositories ==========
@@ -114,5 +158,22 @@ Future<void> setupServiceLocator() async {
       fetchUseCase: getIt<FetchMediaImagesUseCase>(),
       deleteUseCase: getIt<DeleteMediaImageUseCase>(),
     ),
+  );
+
+  // ========== Feature Cubits ==========
+  getIt.registerFactory<CategoryCubit>(
+    () => CategoryCubit(getIt<CategoryRepository>()),
+  );
+
+  getIt.registerFactory<BannerCubit>(
+    () => BannerCubit(getIt<BannerRepository>()),
+  );
+
+  getIt.registerFactory<BrandCubit>(
+    () => BrandCubit(getIt<BrandRepository>()),
+  );
+
+  getIt.registerFactory<ProductCubit>(
+    () => ProductCubit(getIt<ProductRepository>()),
   );
 }

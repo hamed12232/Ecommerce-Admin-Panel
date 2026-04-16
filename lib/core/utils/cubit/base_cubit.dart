@@ -1,36 +1,58 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yt_ecommerce_admin_panel/core/utils/cubit/base_state.dart';
 
-abstract class BaseCubit<T extends Cubit<S>, S extends ApiState>
-    extends Cubit<S> {
-  BaseCubit(super.initialState);
+/// Base Cubit for states that contain data
+abstract class BaseCubit<T> extends Cubit<ApiState<T>> {
+  BaseCubit() : super(ApiState<T>());
 
-  void emitLoading() => emit(state.copyWith(status: ApiStatus.loading) as S);
+  void emitLoading() {
+    emit(state.copyWith(status: ApiStatus.loading));
+  }
 
-  void emitSuccess(T data) => emit(state.copyWith(
-        status: ApiStatus.success,
-        data: data,
-      ) as S);
+  void emitSuccess(T data) {
+    emit(state.copyWith(
+      status: ApiStatus.success,
+      data: data,
+      error: null,
+    ));
+  }
 
-  void emitError(String message) => emit(state.copyWith(
-        status: ApiStatus.error,
-        error: message,
-      ) as S);
+  void emitError(String message) {
+    emit(state.copyWith(
+      status: ApiStatus.error,
+      error: message,
+    ));
+  }
 
-  void emitInitial() => emit(state.copyWith(status: ApiStatus.initial) as S);
+  void emitInitial() {
+    emit(state.copyWith(
+      status: ApiStatus.initial,
+      data: null,
+      error: null,
+    ));
+  }
 }
 
+/// Base Cubit for states WITHOUT data (only status)
 class BaseStateCubit extends Cubit<ApiState<void>> {
-  BaseStateCubit() : super(const ApiState());
+  BaseStateCubit() : super(const ApiState<void>());
 
-  void emitLoading() => emit(const ApiState(status: ApiStatus.loading));
+  void emitLoading() {
+    emit(const ApiState<void>(status: ApiStatus.loading));
+  }
 
-  void emitSuccess() => emit(const ApiState(status: ApiStatus.success));
+  void emitSuccess() {
+    emit(const ApiState<void>(status: ApiStatus.success));
+  }
 
-  void emitError(String message) => emit(ApiState(
-        status: ApiStatus.error,
-        error: message,
-      ));
+  void emitError(String message) {
+    emit(ApiState<void>(
+      status: ApiStatus.error,
+      error: message,
+    ));
+  }
 
-  void emitInitial() => emit(const ApiState(status: ApiStatus.initial));
+  void emitInitial() {
+    emit(const ApiState<void>(status: ApiStatus.initial));
+  }
 }

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:yt_ecommerce_admin_panel/core/utils/di/service_locator.dart';
 
 import '../../features/auth/modules/forget_password/view/forget_password_screen.dart';
 import '../../features/auth/modules/login/view/login_screen.dart';
@@ -6,17 +8,21 @@ import '../../features/auth/modules/reset_password/view/reset_password_screen.da
 import '../../features/banner/data/models/banner_model.dart';
 import '../../features/banner/presentation/screens/banner_screen.dart';
 import '../../features/banner/presentation/screens/create_banner_screen.dart';
+import '../../features/banner/presentation/cubit/banner_cubit.dart';
 import '../../features/brand/data/models/brand_model.dart';
 import '../../features/brand/presentation/screens/brand_screen.dart';
 import '../../features/brand/presentation/screens/create_brand_screen.dart';
+import '../../features/brand/presentation/cubit/brand_cubit.dart';
 import '../../features/category/data/models/category_model.dart';
 import '../../features/category/presentation/screens/category_screen.dart';
 import '../../features/category/presentation/screens/create_category_screen.dart';
+import '../../features/category/presentation/cubit/category_cubit.dart';
 import '../../features/dashboard/presentation/screens/dashboard_screen.dart';
 import '../../features/media/presentation/screens/media_screen.dart';
 import '../../features/product/data/models/product_model.dart';
 import '../../features/product/presentation/screens/product_screen.dart';
 import '../../features/product/presentation/screens/create_product_screen.dart';
+import '../../features/product/presentation/cubit/product_cubit.dart';
 
 class AppRoutes {
   // ── Auth route names ──────────────────────────────────────────
@@ -67,33 +73,93 @@ class AppRoutes {
       case media:
         return _page(const MediaScreen(), settings);
       case categories:
-        return _page(const CategoryScreen(), settings);
+        return _page(
+            BlocProvider(
+              create: (_) => getIt<CategoryCubit>(),
+              child: const CategoryScreen(),
+            ),
+            settings);
       case createCategory:
-        return _page(const CreateCategoryScreen(), settings);
+        return _page(
+            BlocProvider(
+              create: (_) => getIt<CategoryCubit>(),
+              child: const CreateCategoryScreen(),
+            ),
+            settings);
       case editCategory:
         final category = settings.arguments as CategoryModel;
-        return _page(CreateCategoryScreen(category: category), settings);
+        return _page(
+            BlocProvider(
+              create: (_) => getIt<CategoryCubit>(),
+              child: CreateCategoryScreen(category: category),
+            ),
+            settings);
       case brands:
-        return _page(const BrandScreen(), settings);
+        return _page(
+            BlocProvider(
+              create: (_) => getIt<BrandCubit>(),
+              child: const BrandScreen(),
+            ),
+            settings);
       case createBrand:
-        return _page(const CreateBrandScreen(), settings);
+        return _page(
+            BlocProvider(
+              create: (_) => getIt<BrandCubit>(),
+              child: const CreateBrandScreen(),
+            ),
+            settings);
       case editBrand:
         final brand = settings.arguments as BrandModel;
-        return _page(CreateBrandScreen(brand: brand), settings);
+        return _page(
+            BlocProvider(
+              create: (_) => getIt<BrandCubit>(),
+              child: CreateBrandScreen(brand: brand),
+            ),
+            settings);
       case banners:
-        return _page(const BannerScreen(), settings);
+        return _page(
+            BlocProvider(
+              create: (_) => getIt<BannerCubit>(),
+              child: const BannerScreen(),
+            ),
+            settings);
       case createBanner:
-        return _page(const CreateBannerScreen(), settings);
+        return _page(
+            BlocProvider(
+              create: (_) => getIt<BannerCubit>(),
+              child: const CreateBannerScreen(),
+            ),
+            settings);
       case editBanner:
         final banner = settings.arguments as BannerModel;
-        return _page(CreateBannerScreen(banner: banner), settings);
+        return _page(
+            BlocProvider(
+              create: (_) => getIt<BannerCubit>(),
+              child: CreateBannerScreen(banner: banner),
+            ),
+            settings);
       case products:
-        return _page(const ProductScreen(), settings);
+        return _page(
+            BlocProvider(
+              create: (_) => getIt<ProductCubit>(),
+              child: const ProductScreen(),
+            ),
+            settings);
       case createProduct:
-        return _page(const CreateProductScreen(), settings);
+        return _page(
+            BlocProvider(
+              create: (_) => getIt<ProductCubit>(),
+              child: const CreateProductScreen(),
+            ),
+            settings);
       case editProduct:
         final product = settings.arguments as ProductModel;
-        return _page(CreateProductScreen(product: product), settings);
+        return _page(
+            BlocProvider(
+              create: (_) => getIt<ProductCubit>(),
+              child: CreateProductScreen(product: product),
+            ),
+            settings);
       default:
         return _page(const DashboardScreen(), settings);
     }

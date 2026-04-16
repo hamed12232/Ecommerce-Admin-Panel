@@ -1,12 +1,17 @@
+import 'package:yt_ecommerce_admin_panel/core/data/repositories/base_repository.dart';
 import 'package:yt_ecommerce_admin_panel/core/utils/helpers/helper_functions.dart';
 
-class BrandModel {
+class BrandModel implements BaseEntity {
+  @override
   final String id;
   final String name;
   final String image;
   final bool isFeatured;
   final List<String> categories;
+  @override
   final DateTime createdAt;
+  @override
+  final DateTime? updatedAt;
 
   const BrandModel({
     required this.id,
@@ -15,9 +20,65 @@ class BrandModel {
     this.isFeatured = false,
     this.categories = const [],
     required this.createdAt,
+    this.updatedAt,
   });
 
   String get formattedDate => THelperFunctions.getFormattedDate(createdAt);
+
+  BrandModel copyWith({
+    String? id,
+    String? name,
+    String? image,
+    bool? isFeatured,
+    List<String>? categories,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) {
+    return BrandModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      image: image ?? this.image,
+      isFeatured: isFeatured ?? this.isFeatured,
+      categories: categories ?? this.categories,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'image': image,
+      'isFeatured': isFeatured,
+      'categories': categories,
+      'createdAt': createdAt.toIso8601String(),
+      if (updatedAt != null) 'updatedAt': updatedAt!.toIso8601String(),
+    };
+  }
+
+  factory BrandModel.fromJson(Map<String, dynamic> json) {
+    return BrandModel(
+      id: json['id'] as String? ?? '',
+      name: json['name'] as String? ?? '',
+      image: json['image'] as String? ?? '',
+      isFeatured: json['isFeatured'] as bool? ?? false,
+      categories: (json['categories'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          [],
+      createdAt: json['createdAt'] != null
+          ? (json['createdAt'] is int
+              ? DateTime.fromMillisecondsSinceEpoch(json['createdAt'])
+              : DateTime.parse(json['createdAt']))
+          : DateTime.now(),
+      updatedAt: json['updatedAt'] != null
+          ? (json['updatedAt'] is int
+              ? DateTime.fromMillisecondsSinceEpoch(json['updatedAt'])
+              : DateTime.tryParse(json['updatedAt']))
+          : null,
+    );
+  }
 
   static List<BrandModel> dummyBrands = [
     BrandModel(

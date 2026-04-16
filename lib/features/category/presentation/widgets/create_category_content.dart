@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:yt_ecommerce_admin_panel/core/common/widgets/breadcrumbs/breadcrumb_with_heading.dart';
 import 'package:yt_ecommerce_admin_panel/core/common/widgets/containers/rounded_container.dart';
@@ -7,8 +8,10 @@ import 'package:yt_ecommerce_admin_panel/core/routes/app_routes.dart';
 import 'package:yt_ecommerce_admin_panel/core/utils/constants/colors.dart';
 import 'package:yt_ecommerce_admin_panel/core/utils/constants/enums.dart';
 import 'package:yt_ecommerce_admin_panel/core/utils/constants/sizes.dart';
+import 'package:yt_ecommerce_admin_panel/core/utils/cubit/base_state.dart';
 import 'package:yt_ecommerce_admin_panel/core/utils/device/device_utility.dart';
 import 'package:yt_ecommerce_admin_panel/features/category/data/models/category_model.dart';
+import 'package:yt_ecommerce_admin_panel/features/category/presentation/cubit/category_cubit.dart';
 import 'package:yt_ecommerce_admin_panel/features/media/presentation/widgets/media_image_picker.dart';
 
 class CreateCategoryContent extends StatefulWidget {
@@ -87,10 +90,9 @@ class _CreateCategoryContentState extends State<CreateCategoryContent> {
                         // ── Category Name ────────────
                         TextFormField(
                           controller: _nameController,
-                          validator: (value) =>
-                              (value == null || value.isEmpty)
-                                  ? 'Category name is required'
-                                  : null,
+                          validator: (value) => (value == null || value.isEmpty)
+                              ? 'Category name is required'
+                              : null,
                           decoration: const InputDecoration(
                             labelText: 'Category Name',
                             prefixIcon: Icon(Iconsax.category),
@@ -99,36 +101,44 @@ class _CreateCategoryContentState extends State<CreateCategoryContent> {
                         const SizedBox(height: TSizes.spaceBtwInputFields),
 
                         // ── Parent Category ──────────
-                        DropdownButtonFormField<String>(
-                          initialValue: _selectedParent,
-                          decoration: const InputDecoration(
-                            labelText: 'Parent Category',
-                            prefixIcon: Icon(Iconsax.bezier),
-                          ),
-                          items: CategoryModel.parentCategoryNames
-                              .map((name) => DropdownMenuItem(
-                                    value: name,
-                                    child: Text(name.isEmpty
-                                        ? 'None'
-                                        : name),
-                                  ))
-                              .toList(),
-                          onChanged: (value) => setState(
-                              () => _selectedParent = value ?? ''),
+                        BlocBuilder<CategoryCubit,
+                            ApiState<List<CategoryModel>>>(
+                          builder: (context, state) {
+                            final categories = state.data ?? [];
+                            final parentNames =
+                                CategoryModel.parentCategoryNames(categories);
+                            return DropdownButtonFormField<String>(
+                              initialValue: _selectedParent.isEmpty
+                                  ? null
+                                  : _selectedParent,
+                              decoration: const InputDecoration(
+                                labelText: 'Parent Category',
+                                prefixIcon: Icon(Iconsax.bezier),
+                              ),
+                              items: parentNames
+                                  .map((name) => DropdownMenuItem(
+                                        value: name,
+                                        child:
+                                            Text(name.isEmpty ? 'None' : name),
+                                      ))
+                                  .toList(),
+                              onChanged: (value) =>
+                                  setState(() => _selectedParent = value ?? ''),
+                            );
+                          },
                         ),
                         const SizedBox(height: TSizes.spaceBtwSections),
 
                         // ── Image Uploader ───────────
                         TImageUploader(
                           image: _imageUrl,
-                          imageType: _imageUrl != null &&
-                                  _imageUrl!.startsWith('http')
-                              ? ImageType.network
-                              : ImageType.asset,
+                          imageType:
+                              _imageUrl != null && _imageUrl!.startsWith('http')
+                                  ? ImageType.network
+                                  : ImageType.asset,
                           onIconButtonPressed: () async {
-                            final url =
-                                await MediaImagePicker.showSingle(
-                                    context: context);
+                            final url = await MediaImagePicker.showSingle(
+                                context: context);
                             if (url != null) {
                               setState(() => _imageUrl = url);
                             }
@@ -142,35 +152,73 @@ class _CreateCategoryContentState extends State<CreateCategoryContent> {
                           onChanged: (value) =>
                               setState(() => _isFeatured = value ?? false),
                           title: const Text('Featured'),
-                          controlAffinity:
-                              ListTileControlAffinity.leading,
+                          controlAffinity: ListTileControlAffinity.leading,
                           contentPadding: EdgeInsets.zero,
                           activeColor: TColors.primary,
                         ),
                         const SizedBox(height: TSizes.spaceBtwSections),
 
                         // ── Submit Button ────────────
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              if (_formKey.currentState!.validate()) {
-                                // TODO: Implement create/update logic
-                                Navigator.pop(context);
-                              }
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: TColors.primary,
-                              foregroundColor: Colors.white,
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: TSizes.md),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                    TSizes.borderRadiusMd),
+                        BlocBuilder<CategoryCubit,
+                            ApiState<List<CategoryModel>>>(
+                          builder: (context, state) {
+                            final isLoading = state.status == ApiStatus.loading;
+                            return SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton(
+                                onPressed: isLoading
+                                    ? null
+                                    : () {
+                                        if (_formKey.currentState!.validate()) {
+                                          final category = CategoryModel(
+                                            id: _isEditing
+                                                ? widget.category!.id
+                                                : DateTime.now()
+                                                    .millisecondsSinceEpoch
+                                                    .toString(),
+                                            name: _nameController.text,
+                                            parentId: _selectedParent,
+                                            image: _imageUrl ?? '',
+                                            isFeatured: _isFeatured,
+                                            createdAt: _isEditing
+                                                ? widget.category!.createdAt
+                                                : DateTime.now(),
+                                          );
+
+                                          if (_isEditing) {
+                                            context
+                                                .read<CategoryCubit>()
+                                                .updateCategory(category);
+                                          } else {
+                                            context
+                                                .read<CategoryCubit>()
+                                                .createCategory(category);
+                                          }
+                                          Navigator.pop(context);
+                                        }
+                                      },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: TColors.primary,
+                                  foregroundColor: Colors.white,
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: TSizes.md),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        TSizes.borderRadiusMd),
+                                  ),
+                                ),
+                                child: isLoading
+                                    ? const SizedBox(
+                                        height: 20,
+                                        width: 20,
+                                        child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                            color: Colors.white),
+                                      )
+                                    : Text(_isEditing ? 'Update' : 'Create'),
                               ),
-                            ),
-                            child: Text(_isEditing ? 'Update' : 'Create'),
-                          ),
+                            );
+                          },
                         ),
                       ],
                     ),
