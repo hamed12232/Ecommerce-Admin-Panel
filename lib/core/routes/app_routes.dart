@@ -103,16 +103,22 @@ class AppRoutes {
             settings);
       case createBrand:
         return _page(
-            BlocProvider(
-              create: (_) => getIt<BrandCubit>(),
+            MultiBlocProvider(
+              providers: [
+                BlocProvider(create: (_) => getIt<BrandCubit>()),
+                BlocProvider(create: (_) => getIt<CategoryCubit>()),
+              ],
               child: const CreateBrandScreen(),
             ),
             settings);
       case editBrand:
         final brand = settings.arguments as BrandModel;
         return _page(
-            BlocProvider(
-              create: (_) => getIt<BrandCubit>(),
+            MultiBlocProvider(
+              providers: [
+                BlocProvider(create: (_) => getIt<BrandCubit>()),
+                BlocProvider(create: (_) => getIt<CategoryCubit>()),
+              ],
               child: CreateBrandScreen(brand: brand),
             ),
             settings);
@@ -147,16 +153,24 @@ class AppRoutes {
             settings);
       case createProduct:
         return _page(
-            BlocProvider(
-              create: (_) => getIt<ProductCubit>(),
+            MultiBlocProvider(
+              providers: [
+                BlocProvider(create: (_) => getIt<ProductCubit>()),
+                BlocProvider(create: (_) => getIt<CategoryCubit>()),
+                BlocProvider(create: (_) => getIt<BrandCubit>()),
+              ],
               child: const CreateProductScreen(),
             ),
             settings);
       case editProduct:
         final product = settings.arguments as ProductModel;
         return _page(
-            BlocProvider(
-              create: (_) => getIt<ProductCubit>(),
+            MultiBlocProvider(
+              providers: [
+                BlocProvider(create: (_) => getIt<ProductCubit>()),
+                BlocProvider(create: (_) => getIt<CategoryCubit>()),
+                BlocProvider(create: (_) => getIt<BrandCubit>()),
+              ],
               child: CreateProductScreen(product: product),
             ),
             settings);

@@ -6,7 +6,7 @@ import 'package:yt_ecommerce_admin_panel/core/utils/exceptions/platform_exceptio
 
 abstract class BaseEntity {
   String get id;
-  DateTime get createdAt;
+  DateTime? get createdAt;
   DateTime? get updatedAt;
 }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:yt_ecommerce_admin_panel/core/common/widgets/breadcrumbs/breadcrumb_with_heading.dart';
 import 'package:yt_ecommerce_admin_panel/core/common/widgets/chips/rounded_choice_chips.dart';
@@ -8,9 +9,12 @@ import 'package:yt_ecommerce_admin_panel/core/routes/app_routes.dart';
 import 'package:yt_ecommerce_admin_panel/core/utils/constants/colors.dart';
 import 'package:yt_ecommerce_admin_panel/core/utils/constants/enums.dart';
 import 'package:yt_ecommerce_admin_panel/core/utils/constants/sizes.dart';
+import 'package:yt_ecommerce_admin_panel/core/utils/cubit/base_state.dart';
 import 'package:yt_ecommerce_admin_panel/core/utils/device/device_utility.dart';
 import 'package:yt_ecommerce_admin_panel/features/brand/data/models/brand_model.dart';
+import 'package:yt_ecommerce_admin_panel/features/brand/presentation/cubit/brand_cubit.dart';
 import 'package:yt_ecommerce_admin_panel/features/category/data/models/category_model.dart';
+import 'package:yt_ecommerce_admin_panel/features/category/presentation/cubit/category_cubit.dart';
 import 'package:yt_ecommerce_admin_panel/features/media/presentation/widgets/media_image_picker.dart';
 
 class CreateBrandContent extends StatefulWidget {
@@ -42,6 +46,9 @@ class _CreateBrandContentState extends State<CreateBrandContent> {
     }
     _isFeatured = brand?.isFeatured ?? false;
     _imageUrl = brand?.image;
+
+    // Fetch categories from Firestore
+    context.read<CategoryCubit>().fetchCategories();
   }
 
   @override
@@ -101,34 +108,84 @@ class _CreateBrandContentState extends State<CreateBrandContent> {
                         ),
                         const SizedBox(height: TSizes.spaceBtwSections),
 
-// ── Select Categories ──────────
+                        // ── Select Categories ──────────
                         Text(
                           'Select Categories',
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
                         const SizedBox(height: TSizes.spaceBtwItems),
-                        Wrap(
-                          spacing: TSizes.sm,
-                          runSpacing: TSizes.sm,
-                          children: CategoryModel.dummyCategories
-                              .map((c) => c.name)
-                              .map((name) {
-                            final isSelected =
-                                _selectedCategories.contains(name);
-                            return TChoiceChip(
-                              text: name,
-                              selected: isSelected,
-                              onSelected: (selected) {
-                                setState(() {
-                                  if (selected) {
-                                    _selectedCategories.add(name);
-                                  } else {
-                                    _selectedCategories.remove(name);
-                                  }
-                                });
-                              },
+                        BlocBuilder<CategoryCubit,
+                            ApiState<List<CategoryModel>>>(
+                          builder: (context, state) {
+                            // Handle loading state
+                            if (state.isLoading) {
+                              return const Padding(
+                                padding: EdgeInsets.symmetric(vertical: TSizes.md),
+                                child: Center(
+                                  child: SizedBox(
+                                    height: 24,
+                                    width: 24,
+                                    child: CircularProgressIndicator(strokeWidth: 2),
+                                  ),
+                                ),
+                              );
+                            }
+
+                            // Handle error state
+                            if (state.isError) {
+                              return Column(
+                                children: [
+                                  Text(
+                                    'Failed to load categories',
+                                    style: TextStyle(color: TColors.error),
+                                  ),
+                                  const SizedBox(height: TSizes.sm),
+                                  TextButton.icon(
+                                    onPressed: () => context
+                                        .read<CategoryCubit>()
+                                        .fetchCategories(),
+                                    icon: const Icon(Iconsax.refresh),
+                                    label: const Text('Retry'),
+                                  ),
+                                ],
+                              );
+                            }
+
+                            final categories = state.data ?? [];
+
+                            if (categories.isEmpty && state.isSuccess) {
+                              return const Padding(
+                                padding: EdgeInsets.symmetric(vertical: TSizes.sm),
+                                child: Text(
+                                  'No categories found. Create a category first.',
+                                  style: TextStyle(color: Colors.grey),
+                                ),
+                              );
+                            }
+
+                            return Wrap(
+                              spacing: TSizes.sm,
+                              runSpacing: TSizes.sm,
+                              children:
+                                  categories.map((c) => c.name).map((name) {
+                                final isSelected =
+                                    _selectedCategories.contains(name);
+                                return TChoiceChip(
+                                  text: name,
+                                  selected: isSelected,
+                                  onSelected: (selected) {
+                                    setState(() {
+                                      if (selected) {
+                                        _selectedCategories.add(name);
+                                      } else {
+                                        _selectedCategories.remove(name);
+                                      }
+                                    });
+                                  },
+                                );
+                              }).toList(),
                             );
-                          }).toList(),
+                          },
                         ),
                         const SizedBox(height: TSizes.spaceBtwSections),
 
@@ -162,26 +219,70 @@ class _CreateBrandContentState extends State<CreateBrandContent> {
                         const SizedBox(height: TSizes.spaceBtwSections),
 
                         // ── Submit Button ────────────
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              if (_formKey.currentState!.validate()) {
-                                Navigator.pop(context);
-                              }
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: TColors.primary,
-                              foregroundColor: Colors.white,
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: TSizes.md),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                    TSizes.borderRadiusMd),
+                        BlocBuilder<BrandCubit, ApiState<List<BrandModel>>>(
+                          builder: (context, state) {
+                            final isLoading = state.status == ApiStatus.loading;
+                            return SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton(
+                                onPressed: isLoading
+                                    ? null
+                                    : () async {
+                                        if (_formKey.currentState!.validate()) {
+                                          final brand = BrandModel(
+                                            id: _isEditing
+                                                ? widget.brand!.id
+                                                : DateTime.now()
+                                                    .millisecondsSinceEpoch
+                                                    .toString(),
+                                            name: _nameController.text,
+                                            image: _imageUrl ?? '',
+                                            isFeatured: _isFeatured,
+                                            categories:
+                                                _selectedCategories.toList(),
+                                            createdAt: _isEditing
+                                                ? widget.brand!.createdAt
+                                                : DateTime.now(),
+                                          );
+
+                                          if (_isEditing) {
+                                            await context
+                                                .read<BrandCubit>()
+                                                .updateBrand(brand);
+                                          } else {
+                                            await context
+                                                .read<BrandCubit>()
+                                                .createBrand(brand);
+                                          }
+                                          if (!mounted) return;
+                                          if (context.read<BrandCubit>().state.status ==
+                                              ApiStatus.success) {
+                                            Navigator.pop(context, true);
+                                          }
+                                        }
+                                      },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: TColors.primary,
+                                  foregroundColor: Colors.white,
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: TSizes.md),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        TSizes.borderRadiusMd),
+                                  ),
+                                ),
+                                child: isLoading
+                                    ? const SizedBox(
+                                        height: 20,
+                                        width: 20,
+                                        child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                            color: Colors.white),
+                                      )
+                                    : Text(_isEditing ? 'Update' : 'Create'),
                               ),
-                            ),
-                            child: Text(_isEditing ? 'Update' : 'Create'),
-                          ),
+                            );
+                          },
                         ),
                       ],
                     ),

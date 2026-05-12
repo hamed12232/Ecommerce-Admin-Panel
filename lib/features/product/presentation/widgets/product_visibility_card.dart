@@ -4,12 +4,12 @@ import 'package:yt_ecommerce_admin_panel/core/utils/constants/sizes.dart';
 import 'package:yt_ecommerce_admin_panel/features/product/presentation/widgets/segment_button.dart';
 
 class ProductVisibilityCard extends StatelessWidget {
-  final bool isPublished;
+  final bool isFeatured;
   final void Function(bool) onVisibilityChanged;
 
   const ProductVisibilityCard({
     super.key,
-    required this.isPublished,
+    required this.isFeatured,
     required this.onVisibilityChanged,
   });
 
@@ -22,7 +22,7 @@ class ProductVisibilityCard extends StatelessWidget {
           Text('Visibility', style: Theme.of(context).textTheme.headlineSmall),
           const SizedBox(height: TSizes.sm),
           SegmentButton<bool>(
-            selected: {isPublished},
+            selected: {isFeatured},
             segments: const [
               ButtonSegment(value: true, label: Text('Published')),
               ButtonSegment(value: false, label: Text('Hidden')),

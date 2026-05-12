@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yt_ecommerce_admin_panel/core/common/widgets/breadcrumbs/breadcrumb_with_heading.dart';
 import 'package:yt_ecommerce_admin_panel/core/routes/app_routes.dart';
 import 'package:yt_ecommerce_admin_panel/core/utils/constants/sizes.dart';
+import 'package:yt_ecommerce_admin_panel/core/utils/cubit/base_state.dart';
 import 'package:yt_ecommerce_admin_panel/core/utils/device/device_utility.dart';
+import 'package:yt_ecommerce_admin_panel/features/brand/data/models/brand_model.dart';
+import 'package:yt_ecommerce_admin_panel/features/brand/presentation/cubit/brand_cubit.dart';
+import 'package:yt_ecommerce_admin_panel/features/category/presentation/cubit/category_cubit.dart';
 import 'package:yt_ecommerce_admin_panel/features/product/data/models/product_model.dart';
+import 'package:yt_ecommerce_admin_panel/features/product/presentation/cubit/product_cubit.dart';
 import 'package:yt_ecommerce_admin_panel/features/product/presentation/widgets/product_form_buttons.dart';
 import 'package:yt_ecommerce_admin_panel/features/product/presentation/widgets/product_desktop_layout.dart';
 import 'package:yt_ecommerce_admin_panel/features/product/presentation/widgets/product_mobile_layout.dart';
@@ -34,8 +40,11 @@ class _CreateProductContentState extends State<CreateProductContent> {
   String? _thumbnail;
   late List<String> _productImages;
   String _selectedBrand = '';
+  BrandModel? _selectedBrandModel;
   late List<String> _selectedCategories;
-  bool _isPublished = true;
+  bool _isFeatured = true;
+
+
 
   bool get _isEditing => widget.product != null;
 
@@ -59,8 +68,25 @@ class _CreateProductContentState extends State<CreateProductContent> {
     _thumbnail = p?.thumbnail;
     _productImages = p != null ? List.of(p.images) : [];
     _selectedBrand = p?.brand ?? '';
+    _selectedBrandModel = p?.brandData ??
+        (p != null && p.brand.isNotEmpty
+            ? BrandModel(
+                id: '',
+                name: p.brand,
+                image: p.brandImage,
+                categories: const [],
+                productsCount: 0,
+                isFeatured: false,
+              )
+            : null);
     _selectedCategories = p != null ? List.of(p.categories) : [];
-    _isPublished = p?.isPublished ?? true;
+    _isFeatured = p?.isFeatured ?? false;
+
+    // Fetch categories and brands from Firestore
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<CategoryCubit>().fetchCategories();
+      context.read<BrandCubit>().fetchBrands();
+    });
   }
 
   @override
@@ -129,7 +155,7 @@ class _CreateProductContentState extends State<CreateProductContent> {
 
   Future<void> _pickAdditionalImages() async {
     final url = await MediaImagePicker.show(context: context);
-    if (url != null) setState(() => _productImages=url);
+    if (url != null) setState(() => _productImages = url);
   }
 
   void _updateVariationImage(int index, String image) {
@@ -182,7 +208,7 @@ class _CreateProductContentState extends State<CreateProductContent> {
                     productImages: _productImages,
                     selectedBrand: _selectedBrand,
                     selectedCategories: _selectedCategories,
-                    isPublished: _isPublished,
+                    isFeatured: _isFeatured,
                     onProductTypeChanged: (type) =>
                         setState(() => _productType = type),
                     onAddAttribute: _addAttribute,
@@ -192,8 +218,10 @@ class _CreateProductContentState extends State<CreateProductContent> {
                     onPickImages: _pickAdditionalImages,
                     onRemoveImage: (img) =>
                         setState(() => _productImages.remove(img)),
-                    onBrandChanged: (v) =>
-                        setState(() => _selectedBrand = v ?? ''),
+                    onBrandChanged: (brand) => setState(() {
+                      _selectedBrand = brand?.name ?? '';
+                      _selectedBrandModel = brand;
+                    }),
                     onCategorySelected: (v) {
                       if (v != null && !_selectedCategories.contains(v)) {
                         setState(() => _selectedCategories.add(v));
@@ -202,7 +230,7 @@ class _CreateProductContentState extends State<CreateProductContent> {
                     onCategoryRemoved: (v) =>
                         setState(() => _selectedCategories.remove(v)),
                     onVisibilityChanged: (v) =>
-                        setState(() => _isPublished = v),
+                        setState(() => _isFeatured = v),
                     onVariationImageChanged: _updateVariationImage,
                   )
                 else
@@ -221,7 +249,7 @@ class _CreateProductContentState extends State<CreateProductContent> {
                     productImages: _productImages,
                     selectedBrand: _selectedBrand,
                     selectedCategories: _selectedCategories,
-                    isPublished: _isPublished,
+                    isFeatured: _isFeatured,
                     onProductTypeChanged: (type) =>
                         setState(() => _productType = type),
                     onAddAttribute: _addAttribute,
@@ -231,8 +259,10 @@ class _CreateProductContentState extends State<CreateProductContent> {
                     onPickImages: _pickAdditionalImages,
                     onRemoveImage: (img) =>
                         setState(() => _productImages.remove(img)),
-                    onBrandChanged: (v) =>
-                        setState(() => _selectedBrand = v ?? ''),
+                    onBrandChanged: (brand) => setState(() {
+                      _selectedBrand = brand?.name ?? '';
+                      _selectedBrandModel = brand;
+                    }),
                     onCategorySelected: (v) {
                       if (v != null && !_selectedCategories.contains(v)) {
                         setState(() => _selectedCategories.add(v));
@@ -241,16 +271,58 @@ class _CreateProductContentState extends State<CreateProductContent> {
                     onCategoryRemoved: (v) =>
                         setState(() => _selectedCategories.remove(v)),
                     onVisibilityChanged: (v) =>
-                        setState(() => _isPublished = v),
+                        setState(() => _isFeatured = v),
                     onVariationImageChanged: _updateVariationImage,
                   ),
                 const SizedBox(height: TSizes.spaceBtwSections),
                 ProductFormButtons(
                   isEditing: _isEditing,
                   onDiscard: () => Navigator.pop(context),
-                  onSave: () {
+                  onSave: () async {
                     if (_formKey.currentState!.validate()) {
-                      Navigator.pop(context);
+                      final product = ProductModel(
+                        id: _isEditing
+                            ? widget.product!.id
+                            : DateTime.now().millisecondsSinceEpoch.toString(),
+                        title: _titleController.text.trim(),
+                        description: _descriptionController.text.trim(),
+                        thumbnail: _thumbnail ?? '',
+                        images: _productImages,
+                        productType: _productType,
+                        stock: int.tryParse(_stockController.text.trim()) ?? 0,
+                        price:
+                            double.tryParse(_priceController.text.trim()) ?? 0,
+                        salePrice: double.tryParse(
+                                _salePriceController.text.trim()) ??
+                            0,
+                        sku: _isEditing ? widget.product!.sku : '',
+                        categoryId: _selectedCategories.isNotEmpty
+                            ? _selectedCategories.first
+                            : '',
+                        brand: _selectedBrand,
+                        brandImage: _selectedBrandModel?.image ?? '',
+                        brandData: _selectedBrandModel,
+                        categories: _selectedCategories,
+                        isFeatured: _isFeatured,
+                        attributes: _attributes,
+                        variations: _variations,
+                        createdAt: _isEditing
+                            ? widget.product!.createdAt
+                            : DateTime.now(),
+                        updatedAt: DateTime.now(),
+                      );
+
+                      if (_isEditing) {
+                        await context.read<ProductCubit>().updateProduct(product);
+                      } else {
+                        await context.read<ProductCubit>().createProduct(product);
+                      }
+
+                      if (!mounted) return;
+                      if (context.read<ProductCubit>().state.status ==
+                          ApiStatus.success) {
+                        Navigator.pop(context, true);
+                      }
                     }
                   },
                 ),

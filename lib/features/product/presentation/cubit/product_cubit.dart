@@ -19,27 +19,30 @@ class ProductCubit extends BaseCubit<List<ProductModel>> {
   Future<void> createProduct(ProductModel product) async {
     emitLoading();
     final result = await _productRepository.createProduct(product);
-    result.fold(
-      (failure) => emitError(failure.message),
-      (_) => fetchProducts(),
-    );
+    if (result.isRight()) {
+      await fetchProducts();
+    } else {
+      result.fold((failure) => emitError(failure.message), (_) {});
+    }
   }
 
   Future<void> updateProduct(ProductModel product) async {
     emitLoading();
     final result = await _productRepository.updateProduct(product);
-    result.fold(
-      (failure) => emitError(failure.message),
-      (_) => fetchProducts(),
-    );
+    if (result.isRight()) {
+      await fetchProducts();
+    } else {
+      result.fold((failure) => emitError(failure.message), (_) {});
+    }
   }
 
   Future<void> deleteProduct(String id) async {
     emitLoading();
     final result = await _productRepository.deleteProduct(id);
-    result.fold(
-      (failure) => emitError(failure.message),
-      (_) => fetchProducts(),
-    );
+    if (result.isRight()) {
+      await fetchProducts();
+    } else {
+      result.fold((failure) => emitError(failure.message), (_) {});
+    }
   }
 }

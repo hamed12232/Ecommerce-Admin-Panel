@@ -6,7 +6,7 @@ class BannerDataSource extends BaseFirestoreDataSource {
   Future<List<Map<String, dynamic>>> getBanners(
       {bool activeOnly = true}) async {
     if (activeOnly) {
-      return getByField(field: 'isActive', value: true);
+      return getByField(field: 'Active', value: true);
     }
     return getAll();
   }
@@ -16,7 +16,8 @@ class BannerDataSource extends BaseFirestoreDataSource {
   }
 
   Future<void> createBanner(Map<String, dynamic> banner) async {
-    await create(banner['id'] as String, banner);
+    final id = (banner['Id'] ?? banner['id']) as String;
+    await create(id, banner);
   }
 
   Future<void> updateBanner(String id, Map<String, dynamic> banner) async {

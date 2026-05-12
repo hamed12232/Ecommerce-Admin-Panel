@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:yt_ecommerce_admin_panel/core/utils/constants/sizes.dart';
+import 'package:yt_ecommerce_admin_panel/features/brand/data/models/brand_model.dart';
 import 'package:yt_ecommerce_admin_panel/features/product/data/models/product_model.dart';
 import 'package:yt_ecommerce_admin_panel/features/product/presentation/widgets/product_basic_info_card.dart';
 import 'package:yt_ecommerce_admin_panel/features/product/presentation/widgets/product_stock_pricing_card.dart';
@@ -20,8 +21,9 @@ class ProductDesktopLayout extends StatelessWidget {
   final String? thumbnail;
   final List<String> productImages;
   final String selectedBrand;
+
   final List<String> selectedCategories;
-  final bool isPublished;
+  final bool isFeatured;
   final void Function(TProductType) onProductTypeChanged;
   final VoidCallback onAddAttribute;
   final void Function(int) onRemoveAttribute;
@@ -29,7 +31,7 @@ class ProductDesktopLayout extends StatelessWidget {
   final VoidCallback onPickThumbnail;
   final VoidCallback onPickImages;
   final void Function(String) onRemoveImage;
-  final void Function(String?) onBrandChanged;
+  final void Function(BrandModel?) onBrandChanged;
   final void Function(String?) onCategorySelected;
   final void Function(String) onCategoryRemoved;
   final void Function(bool) onVisibilityChanged;
@@ -50,8 +52,9 @@ class ProductDesktopLayout extends StatelessWidget {
     required this.thumbnail,
     required this.productImages,
     required this.selectedBrand,
+
     required this.selectedCategories,
-    required this.isPublished,
+    required this.isFeatured,
     required this.onProductTypeChanged,
     required this.onAddAttribute,
     required this.onRemoveAttribute,
@@ -110,7 +113,7 @@ class ProductDesktopLayout extends StatelessWidget {
             productImages: productImages,
             selectedBrand: selectedBrand,
             selectedCategories: selectedCategories,
-            isPublished: isPublished,
+            isFeatured: isFeatured,
             onPickThumbnail: onPickThumbnail,
             onPickImages: onPickImages,
             onRemoveImage: onRemoveImage,

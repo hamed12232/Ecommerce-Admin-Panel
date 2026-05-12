@@ -7,7 +7,7 @@ class BannerCubit extends BaseCubit<List<BannerModel>> {
 
   BannerCubit(this._bannerRepository) : super();
 
-  Future<void> fetchBanners({bool activeOnly = true}) async {
+  Future<void> fetchBanners({bool activeOnly = false}) async {
     emitLoading();
     final result = await _bannerRepository.getBanners(activeOnly: activeOnly);
     result.fold(
@@ -19,27 +19,30 @@ class BannerCubit extends BaseCubit<List<BannerModel>> {
   Future<void> createBanner(BannerModel banner) async {
     emitLoading();
     final result = await _bannerRepository.createBanner(banner);
-    result.fold(
-      (failure) => emitError(failure.message),
-      (_) => fetchBanners(),
-    );
+    if (result.isRight()) {
+      await fetchBanners();
+    } else {
+      result.fold((failure) => emitError(failure.message), (_) {});
+    }
   }
 
   Future<void> updateBanner(BannerModel banner) async {
     emitLoading();
     final result = await _bannerRepository.updateBanner(banner);
-    result.fold(
-      (failure) => emitError(failure.message),
-      (_) => fetchBanners(),
-    );
+    if (result.isRight()) {
+      await fetchBanners();
+    } else {
+      result.fold((failure) => emitError(failure.message), (_) {});
+    }
   }
 
   Future<void> deleteBanner(String id) async {
     emitLoading();
     final result = await _bannerRepository.deleteBanner(id);
-    result.fold(
-      (failure) => emitError(failure.message),
-      (_) => fetchBanners(),
-    );
+    if (result.isRight()) {
+      await fetchBanners();
+    } else {
+      result.fold((failure) => emitError(failure.message), (_) {});
+    }
   }
 }

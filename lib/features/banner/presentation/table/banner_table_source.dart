@@ -1,5 +1,6 @@
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:yt_ecommerce_admin_panel/core/common/widgets/images/t_rounded_image.dart';
 import 'package:yt_ecommerce_admin_panel/core/routes/app_routes.dart';
@@ -7,6 +8,7 @@ import 'package:yt_ecommerce_admin_panel/core/utils/constants/colors.dart';
 import 'package:yt_ecommerce_admin_panel/core/utils/constants/enums.dart';
 import 'package:yt_ecommerce_admin_panel/core/utils/constants/sizes.dart';
 import 'package:yt_ecommerce_admin_panel/features/banner/data/models/banner_model.dart';
+import 'package:yt_ecommerce_admin_panel/features/banner/presentation/cubit/banner_cubit.dart';
 
 class BannerRows extends DataTableSource {
   final BuildContext context;
@@ -44,17 +46,21 @@ class BannerRows extends DataTableSource {
         // ── Target Screen ──────────────────────────────
         DataCell(
           InkWell(
-            onTap: () => Navigator.pushNamed(
-              context,
-              AppRoutes.editBanner,
-              arguments: banner,
-            ),
+            onTap: () async {
+              final result = await Navigator.pushNamed(
+                context,
+                AppRoutes.editBanner,
+                arguments: banner,
+              );
+              if (result == true && context.mounted) {
+                context.read<BannerCubit>().fetchBanners(activeOnly: false);
+              }
+            },
             child: Text(
               banner.targetScreen.isEmpty ? '—' : banner.targetScreen,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyMedium!
-                  .apply(color: banner.targetScreen.isNotEmpty ? TColors.primary : null),
+              style: Theme.of(context).textTheme.bodyMedium!.apply(
+                  color:
+                      banner.targetScreen.isNotEmpty ? TColors.primary : null),
             ),
           ),
         ),
@@ -73,16 +79,21 @@ class BannerRows extends DataTableSource {
           Row(
             children: [
               IconButton(
-                onPressed: () => Navigator.pushNamed(
-                  context,
-                  AppRoutes.editBanner,
-                  arguments: banner,
-                ),
+                onPressed: () async {
+                  final result = await Navigator.pushNamed(
+                    context,
+                    AppRoutes.editBanner,
+                    arguments: banner,
+                  );
+                  if (result == true && context.mounted) {
+                    context.read<BannerCubit>().fetchBanners(activeOnly: false);
+                  }
+                },
                 icon: const Icon(Iconsax.edit, color: TColors.primary),
               ),
               IconButton(
                 onPressed: () {
-                  // TODO: Implement delete functionality
+                  context.read<BannerCubit>().deleteBanner(banner.id);
                 },
                 icon: const Icon(Iconsax.trash, color: TColors.error),
               ),

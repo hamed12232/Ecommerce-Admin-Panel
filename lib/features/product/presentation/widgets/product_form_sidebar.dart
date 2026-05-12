@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:yt_ecommerce_admin_panel/core/utils/constants/sizes.dart';
+import 'package:yt_ecommerce_admin_panel/features/brand/data/models/brand_model.dart';
 import 'package:yt_ecommerce_admin_panel/features/product/presentation/widgets/product_thumbnail_card.dart';
 import 'package:yt_ecommerce_admin_panel/features/product/presentation/widgets/product_images_card.dart';
 import 'package:yt_ecommerce_admin_panel/features/product/presentation/widgets/product_brand_card.dart';
@@ -10,12 +11,13 @@ class ProductFormSidebar extends StatelessWidget {
   final String? thumbnail;
   final List<String> productImages;
   final String selectedBrand;
+
   final List<String> selectedCategories;
-  final bool isPublished;
+  final bool isFeatured;
   final VoidCallback onPickThumbnail;
   final VoidCallback onPickImages;
   final void Function(String) onRemoveImage;
-  final void Function(String?) onBrandChanged;
+  final void Function(BrandModel?) onBrandChanged;
   final void Function(String?) onCategorySelected;
   final void Function(String) onCategoryRemoved;
   final void Function(bool) onVisibilityChanged;
@@ -25,8 +27,9 @@ class ProductFormSidebar extends StatelessWidget {
     required this.thumbnail,
     required this.productImages,
     required this.selectedBrand,
+
     required this.selectedCategories,
-    required this.isPublished,
+    required this.isFeatured,
     required this.onPickThumbnail,
     required this.onPickImages,
     required this.onRemoveImage,
@@ -50,7 +53,9 @@ class ProductFormSidebar extends StatelessWidget {
         ),
         const SizedBox(height: TSizes.spaceBtwSections),
         ProductBrandCard(
-            selectedBrand: selectedBrand, onBrandChanged: onBrandChanged),
+          selectedBrand: selectedBrand,
+          onBrandChanged: onBrandChanged,
+        ),
         const SizedBox(height: TSizes.spaceBtwSections),
         ProductCategoriesCard(
           selectedCategories: selectedCategories,
@@ -59,7 +64,7 @@ class ProductFormSidebar extends StatelessWidget {
         ),
         const SizedBox(height: TSizes.spaceBtwSections),
         ProductVisibilityCard(
-            isPublished: isPublished, onVisibilityChanged: onVisibilityChanged),
+            isFeatured: isFeatured, onVisibilityChanged: onVisibilityChanged),
       ],
     );
   }

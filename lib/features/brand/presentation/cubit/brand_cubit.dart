@@ -19,27 +19,30 @@ class BrandCubit extends BaseCubit<List<BrandModel>> {
   Future<void> createBrand(BrandModel brand) async {
     emitLoading();
     final result = await _brandRepository.createBrand(brand);
-    result.fold(
-      (failure) => emitError(failure.message),
-      (_) => fetchBrands(),
-    );
+    if (result.isRight()) {
+      await fetchBrands();
+    } else {
+      result.fold((failure) => emitError(failure.message), (_) {});
+    }
   }
 
   Future<void> updateBrand(BrandModel brand) async {
     emitLoading();
     final result = await _brandRepository.updateBrand(brand);
-    result.fold(
-      (failure) => emitError(failure.message),
-      (_) => fetchBrands(),
-    );
+    if (result.isRight()) {
+      await fetchBrands();
+    } else {
+      result.fold((failure) => emitError(failure.message), (_) {});
+    }
   }
 
   Future<void> deleteBrand(String id) async {
     emitLoading();
     final result = await _brandRepository.deleteBrand(id);
-    result.fold(
-      (failure) => emitError(failure.message),
-      (_) => fetchBrands(),
-    );
+    if (result.isRight()) {
+      await fetchBrands();
+    } else {
+      result.fold((failure) => emitError(failure.message), (_) {});
+    }
   }
 }

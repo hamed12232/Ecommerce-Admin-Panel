@@ -2,11 +2,13 @@ import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:lottie/lottie.dart';
 import 'package:yt_ecommerce_admin_panel/core/common/widgets/breadcrumbs/breadcrumb_with_heading.dart';
 import 'package:yt_ecommerce_admin_panel/core/common/widgets/containers/rounded_container.dart';
 import 'package:yt_ecommerce_admin_panel/core/common/widgets/data_table/paginated_data_table.dart';
 import 'package:yt_ecommerce_admin_panel/core/routes/app_routes.dart';
 import 'package:yt_ecommerce_admin_panel/core/utils/constants/colors.dart';
+import 'package:yt_ecommerce_admin_panel/core/utils/constants/image_strings.dart';
 import 'package:yt_ecommerce_admin_panel/core/utils/constants/sizes.dart';
 import 'package:yt_ecommerce_admin_panel/core/utils/cubit/base_state.dart';
 import 'package:yt_ecommerce_admin_panel/core/utils/device/device_utility.dart';
@@ -58,12 +60,17 @@ class _CategoriesListContentState extends State<CategoriesListContent> {
     return Scaffold(
       body: BlocBuilder<CategoryCubit, ApiState<List<CategoryModel>>>(
         builder: (context, state) {
-          if (state.status == ApiStatus.loading ||
-              state.status == ApiStatus.initial) {
-            return const Center(child: CircularProgressIndicator());
+          if (state.isLoading || state.isInitial) {
+            return Center(
+              child: Lottie.asset(
+                TImages.defaultLoaderAnimation,
+                height: 200,
+                width: 200,
+              ),
+            );
           }
 
-          if (state.status == ApiStatus.error) {
+          if (state.isError) {
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -81,10 +88,16 @@ class _CategoriesListContentState extends State<CategoriesListContent> {
           }
 
           final categories = state.data ?? [];
-          if (_searchQuery.isEmpty && _filteredCategories.isEmpty) {
+          if (_searchQuery.isEmpty) {
             _filteredCategories = categories;
-          } else if (_searchQuery.isEmpty) {
-            _filteredCategories = categories;
+          } else {
+            _filteredCategories = categories
+                .where((c) =>
+                    c.name.toLowerCase().contains(_searchQuery.toLowerCase()) ||
+                    c.parentCategory
+                        .toLowerCase()
+                        .contains(_searchQuery.toLowerCase()))
+                .toList();
           }
 
           return SingleChildScrollView(
@@ -161,7 +174,13 @@ class _CategoriesListContentState extends State<CategoriesListContent> {
     return SizedBox(
       width: 220,
       child: ElevatedButton.icon(
-        onPressed: () => Navigator.pushNamed(context, AppRoutes.createCategory),
+        onPressed: () async {
+          final result =
+              await Navigator.pushNamed(context, AppRoutes.createCategory);
+          if (result == true && mounted) {
+            context.read<CategoryCubit>().fetchCategories();
+          }
+        },
         icon: const Icon(Iconsax.add, size: 20),
         label: const Text('Create New Category'),
         style: ElevatedButton.styleFrom(

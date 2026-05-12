@@ -28,27 +28,30 @@ class CategoryCubit extends BaseCubit<List<CategoryModel>> {
   Future<void> createCategory(CategoryModel category) async {
     emitLoading();
     final result = await _categoryRepository.createCategory(category);
-    result.fold(
-      (failure) => emitError(failure.message),
-      (_) => fetchCategories(),
-    );
+    if (result.isRight()) {
+      await fetchCategories();
+    } else {
+      result.fold((failure) => emitError(failure.message), (_) {});
+    }
   }
 
   Future<void> updateCategory(CategoryModel category) async {
     emitLoading();
     final result = await _categoryRepository.updateCategory(category);
-    result.fold(
-      (failure) => emitError(failure.message),
-      (_) => fetchCategories(),
-    );
+    if (result.isRight()) {
+      await fetchCategories();
+    } else {
+      result.fold((failure) => emitError(failure.message), (_) {});
+    }
   }
 
   Future<void> deleteCategory(String id) async {
     emitLoading();
     final result = await _categoryRepository.deleteCategory(id);
-    result.fold(
-      (failure) => emitError(failure.message),
-      (_) => fetchCategories(),
-    );
+    if (result.isRight()) {
+      await fetchCategories();
+    } else {
+      result.fold((failure) => emitError(failure.message), (_) {});
+    }
   }
 }

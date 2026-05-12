@@ -1,5 +1,6 @@
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:yt_ecommerce_admin_panel/core/common/widgets/chips/rounded_choice_chips.dart';
 import 'package:yt_ecommerce_admin_panel/core/common/widgets/images/t_rounded_image.dart';
@@ -8,6 +9,7 @@ import 'package:yt_ecommerce_admin_panel/core/utils/constants/colors.dart';
 import 'package:yt_ecommerce_admin_panel/core/utils/constants/enums.dart';
 import 'package:yt_ecommerce_admin_panel/core/utils/constants/sizes.dart';
 import 'package:yt_ecommerce_admin_panel/features/brand/data/models/brand_model.dart';
+import 'package:yt_ecommerce_admin_panel/features/brand/presentation/cubit/brand_cubit.dart';
 
 class BrandRows extends DataTableSource {
   final BuildContext context;
@@ -19,9 +21,12 @@ class BrandRows extends DataTableSource {
   DataRow? getRow(int index) {
     if (index >= brands.length) return null;
     final brand = brands[index];
+    final hasCategories = brand.categories.isNotEmpty;
+    final categoryRowHeight = hasCategories ? 108.0 : null;
     return DataRow2(
       selected: false,
       onSelectChanged: (_) {},
+      specificRowHeight: categoryRowHeight,
       cells: [
         // ── Brand Image + Name ────────────────────
         DataCell(
@@ -32,18 +37,23 @@ class BrandRows extends DataTableSource {
                 height: 45,
                 padding: TSizes.xs,
                 image: brand.image,
-                imageType: ImageType.asset,
+                imageType: ImageType.network,
                 borderRadius: TSizes.borderRadiusMd,
                 backgroundColor: TColors.primaryBackground,
               ),
               const SizedBox(width: TSizes.spaceBtwItems),
               Expanded(
                 child: InkWell(
-                  onTap: () => Navigator.pushNamed(
-                    context,
-                    AppRoutes.editBrand,
-                    arguments: brand,
-                  ),
+                  onTap: () async {
+                    final result = await Navigator.pushNamed(
+                      context,
+                      AppRoutes.editBrand,
+                      arguments: brand,
+                    );
+                    if (result == true && context.mounted) {
+                      context.read<BrandCubit>().fetchBrands();
+                    }
+                  },
                   child: Text(
                     brand.name,
                     style: Theme.of(context)
@@ -64,14 +74,13 @@ class BrandRows extends DataTableSource {
           brand.categories.isEmpty
               ? const Text('—')
               : Wrap(
-                  spacing: 4,
-                  runSpacing: 4,
+                  spacing: TSizes.sm,
+                  runSpacing: TSizes.sm,
                   children: brand.categories
                       .map((cat) => TChoiceChip(
                             text: cat,
                             selected: false,
                             onSelected: null,
-                          
                           ))
                       .toList(),
                 ),
@@ -93,16 +102,21 @@ class BrandRows extends DataTableSource {
           Row(
             children: [
               IconButton(
-                onPressed: () => Navigator.pushNamed(
-                  context,
-                  AppRoutes.editBrand,
-                  arguments: brand,
-                ),
+                onPressed: () async {
+                  final result = await Navigator.pushNamed(
+                    context,
+                    AppRoutes.editBrand,
+                    arguments: brand,
+                  );
+                  if (result == true && context.mounted) {
+                    context.read<BrandCubit>().fetchBrands();
+                  }
+                },
                 icon: const Icon(Iconsax.edit, color: TColors.primary),
               ),
               IconButton(
                 onPressed: () {
-                  // TODO: Implement delete functionality
+                  context.read<BrandCubit>().deleteBrand(brand.id);
                 },
                 icon: const Icon(Iconsax.trash, color: TColors.error),
               ),

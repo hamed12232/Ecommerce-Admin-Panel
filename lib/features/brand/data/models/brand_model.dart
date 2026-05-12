@@ -8,8 +8,9 @@ class BrandModel implements BaseEntity {
   final String image;
   final bool isFeatured;
   final List<String> categories;
+  final int productsCount;
   @override
-  final DateTime createdAt;
+  final DateTime? createdAt;
   @override
   final DateTime? updatedAt;
 
@@ -19,11 +20,13 @@ class BrandModel implements BaseEntity {
     this.image = '',
     this.isFeatured = false,
     this.categories = const [],
-    required this.createdAt,
+    this.productsCount = 0,
+    this.createdAt,
     this.updatedAt,
   });
 
-  String get formattedDate => THelperFunctions.getFormattedDate(createdAt);
+  String get formattedDate =>
+      createdAt != null ? THelperFunctions.getFormattedDate(createdAt!) : '';
 
   BrandModel copyWith({
     String? id,
@@ -31,6 +34,7 @@ class BrandModel implements BaseEntity {
     String? image,
     bool? isFeatured,
     List<String>? categories,
+    int? productsCount,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
@@ -40,6 +44,7 @@ class BrandModel implements BaseEntity {
       image: image ?? this.image,
       isFeatured: isFeatured ?? this.isFeatured,
       categories: categories ?? this.categories,
+      productsCount: productsCount ?? this.productsCount,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -47,119 +52,31 @@ class BrandModel implements BaseEntity {
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
-      'name': name,
-      'image': image,
-      'isFeatured': isFeatured,
-      'categories': categories,
-      'createdAt': createdAt.toIso8601String(),
-      if (updatedAt != null) 'updatedAt': updatedAt!.toIso8601String(),
+      'Id': id,
+      'Name': name,
+      'Image': image,
+      'IsFeatured': isFeatured,
+      'Categories': categories,
+      'ProductsCount': productsCount,
+      
     };
   }
 
   factory BrandModel.fromJson(Map<String, dynamic> json) {
     return BrandModel(
-      id: json['id'] as String? ?? '',
-      name: json['name'] as String? ?? '',
-      image: json['image'] as String? ?? '',
-      isFeatured: json['isFeatured'] as bool? ?? false,
-      categories: (json['categories'] as List<dynamic>?)
+      id: json['Id'] ?? '',
+      name: json['Name'] ?? '',
+      image: json['Image'] ?? '',
+      isFeatured: json['IsFeatured'] ?? false,
+      categories: (json['Categories'] as List<dynamic>?)
               ?.map((e) => e.toString())
               .toList() ??
           [],
-      createdAt: json['createdAt'] != null
-          ? (json['createdAt'] is int
-              ? DateTime.fromMillisecondsSinceEpoch(json['createdAt'])
-              : DateTime.parse(json['createdAt']))
-          : DateTime.now(),
-      updatedAt: json['updatedAt'] != null
-          ? (json['updatedAt'] is int
-              ? DateTime.fromMillisecondsSinceEpoch(json['updatedAt'])
-              : DateTime.tryParse(json['updatedAt']))
-          : null,
+      productsCount: json['ProductsCount'] as int? ?? 0,
+    
     );
   }
 
-  static List<BrandModel> dummyBrands = [
-    BrandModel(
-      id: '1',
-      name: 'Nike',
-      image: 'assets/images/content/default_image.png',
-      isFeatured: true,
-      categories: ['Sports', 'Sports Equipments'],
-      createdAt: DateTime(2024, 5, 20),
-    ),
-    BrandModel(
-      id: '2',
-      name: 'Acer',
-      image: 'assets/images/content/default_image.png',
-      isFeatured: false,
-      categories: ['Electronics', 'Laptop'],
-      createdAt: DateTime(2024, 5, 18),
-    ),
-    BrandModel(
-      id: '3',
-      name: 'Adidas',
-      image: 'assets/images/content/default_image.png',
-      isFeatured: true,
-      categories: ['Sports', 'Clothes', 'Sport Shoes'],
-      createdAt: DateTime(2024, 5, 15),
-    ),
-    BrandModel(
-      id: '4',
-      name: 'Jordan',
-      image: 'assets/images/content/default_image.png',
-      isFeatured: true,
-      categories: ['Sports', 'Sport Shoes'],
-      createdAt: DateTime(2024, 5, 14),
-    ),
-    BrandModel(
-      id: '5',
-      name: 'Puma',
-      image: 'assets/images/content/default_image.png',
-      isFeatured: true,
-      categories: ['Sports', 'Sport Shoes', 'Clothes'],
-      createdAt: DateTime(2024, 5, 12),
-    ),
-    BrandModel(
-      id: '6',
-      name: 'Apple',
-      image: 'assets/images/content/default_image.png',
-      isFeatured: true,
-      categories: ['Electronics', 'Mobile', 'Laptop'],
-      createdAt: DateTime(2024, 5, 10),
-    ),
-    BrandModel(
-      id: '7',
-      name: 'ZARA',
-      image: 'assets/images/content/default_image.png',
-      isFeatured: true,
-      categories: ['Clothes', 'Shirts'],
-      createdAt: DateTime(2024, 4, 28),
-    ),
-    BrandModel(
-      id: '8',
-      name: 'Samsung',
-      image: 'assets/images/content/default_image.png',
-      isFeatured: false,
-      categories: ['Electronics', 'Mobile'],
-      createdAt: DateTime(2024, 4, 25),
-    ),
-    BrandModel(
-      id: '9',
-      name: 'Kenwood',
-      image: 'assets/images/content/default_image.png',
-      isFeatured: true,
-      categories: ['Electronics', 'Kitchen Furniture'],
-      createdAt: DateTime(2024, 4, 20),
-    ),
-    BrandModel(
-      id: '10',
-      name: 'IKEA',
-      image: 'assets/images/content/default_image.png',
-      isFeatured: false,
-      categories: ['Furniture', 'Bedroom furniture', 'Office furniture'],
-      createdAt: DateTime(2024, 4, 15),
-    ),
-  ];
+  @Deprecated('Use BrandCubit to fetch brands')
+  static List<BrandModel> get dummyBrands => [];
 }

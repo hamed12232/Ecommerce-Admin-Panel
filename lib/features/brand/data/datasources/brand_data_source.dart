@@ -1,7 +1,7 @@
 import 'package:yt_ecommerce_admin_panel/core/data/datasources/firestore_data_source.dart';
 
 class BrandDataSource extends BaseFirestoreDataSource {
-  BrandDataSource() : super(collectionName: 'brands');
+  BrandDataSource() : super(collectionName: 'Brands');
 
   Future<List<Map<String, dynamic>>> getBrands() async {
     return getAll();
@@ -11,18 +11,8 @@ class BrandDataSource extends BaseFirestoreDataSource {
     return getById(id);
   }
 
-  Future<List<Map<String, dynamic>>> getBrandsForCategory(
-      String categoryId) async {
-    final brandCategoryData =
-        await getByField(field: 'categoryId', value: categoryId);
-    final brandIds =
-        brandCategoryData.map((e) => e['brandId'] as String).toList();
-    if (brandIds.isEmpty) return [];
-    return getByFieldList(field: 'id', values: brandIds);
-  }
-
   Future<void> createBrand(Map<String, dynamic> brand) async {
-    await create(brand['id'] as String, brand);
+    await create(brand['Id'] as String, brand);
   }
 
   Future<void> updateBrand(String id, Map<String, dynamic> brand) async {

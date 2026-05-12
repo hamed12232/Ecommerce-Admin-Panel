@@ -14,6 +14,7 @@ import 'package:yt_ecommerce_admin_panel/features/banner/data/datasources/banner
 import 'package:yt_ecommerce_admin_panel/features/banner/data/repositories/banner_repository.dart';
 import 'package:yt_ecommerce_admin_panel/features/banner/presentation/cubit/banner_cubit.dart';
 import 'package:yt_ecommerce_admin_panel/features/brand/data/datasources/brand_data_source.dart';
+import 'package:yt_ecommerce_admin_panel/features/brand/data/datasources/brand_category_data_source.dart';
 import 'package:yt_ecommerce_admin_panel/features/brand/data/repositories/brand_repository.dart';
 import 'package:yt_ecommerce_admin_panel/features/brand/presentation/cubit/brand_cubit.dart';
 import 'package:yt_ecommerce_admin_panel/features/category/data/datasources/category_data_source.dart';
@@ -33,6 +34,7 @@ import 'package:yt_ecommerce_admin_panel/features/personalization/data/repositor
 import 'package:yt_ecommerce_admin_panel/features/personalization/domain/repositories/base_user_repository.dart';
 import 'package:yt_ecommerce_admin_panel/features/personalization/domain/usecases/fetch_user_details_usecase.dart';
 import 'package:yt_ecommerce_admin_panel/features/product/data/datasources/product_data_source.dart';
+import 'package:yt_ecommerce_admin_panel/features/product/data/datasources/product_category_data_source.dart';
 import 'package:yt_ecommerce_admin_panel/features/product/data/repositories/product_repository.dart';
 import 'package:yt_ecommerce_admin_panel/features/product/presentation/cubit/product_cubit.dart';
 
@@ -72,16 +74,30 @@ Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton<BrandDataSource>(
     () => BrandDataSource(),
   );
+  getIt.registerLazySingleton<BrandCategoryDataSource>(
+    () => BrandCategoryDataSource(),
+  );
   getIt.registerLazySingleton<BrandRepository>(
-    () => BrandRepository(dataSource: getIt<BrandDataSource>()),
+    () => BrandRepository(
+      dataSource: getIt<BrandDataSource>(),
+      brandCategoryDataSource: getIt<BrandCategoryDataSource>(),
+      categoryDataSource: getIt<CategoryDataSource>(),
+    ),
   );
 
   // ========== Product ==========
   getIt.registerLazySingleton<ProductDataSource>(
     () => ProductDataSource(),
   );
+  getIt.registerLazySingleton<ProductCategoryDataSource>(
+    () => ProductCategoryDataSource(),
+  );
   getIt.registerLazySingleton<ProductRepository>(
-    () => ProductRepository(dataSource: getIt<ProductDataSource>()),
+    () => ProductRepository(
+      dataSource: getIt<ProductDataSource>(),
+      productCategoryDataSource: getIt<ProductCategoryDataSource>(),
+      categoryDataSource: getIt<CategoryDataSource>(),
+    ),
   );
 
   // ========== Repositories ==========

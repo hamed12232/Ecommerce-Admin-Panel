@@ -1,12 +1,15 @@
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:yt_ecommerce_admin_panel/core/common/widgets/images/t_rounded_image.dart';
 import 'package:yt_ecommerce_admin_panel/core/routes/app_routes.dart';
 import 'package:yt_ecommerce_admin_panel/core/utils/constants/colors.dart';
 import 'package:yt_ecommerce_admin_panel/core/utils/constants/enums.dart';
+import 'package:yt_ecommerce_admin_panel/core/utils/constants/image_strings.dart';
 import 'package:yt_ecommerce_admin_panel/core/utils/constants/sizes.dart';
 import 'package:yt_ecommerce_admin_panel/features/product/data/models/product_model.dart';
+import 'package:yt_ecommerce_admin_panel/features/product/presentation/cubit/product_cubit.dart';
 
 class ProductRows extends DataTableSource {
   final BuildContext context;
@@ -15,6 +18,16 @@ class ProductRows extends DataTableSource {
   bool _sortAscending = true;
 
   ProductRows(this.context, this.products);
+
+  String _brandImageFor(ProductModel product) {
+    if (product.brandImage.isNotEmpty) {
+      return product.brandImage;
+    }
+    if (product.brandData?.image.isNotEmpty == true) {
+      return product.brandData!.image;
+    }
+    return TImages.defaultImage;
+  }
 
   /// Sort by a given column index.
   void sort(int columnIndex, bool ascending) {
@@ -56,11 +69,16 @@ class ProductRows extends DataTableSource {
         // ── Product (Image + Name) ────────────────────
         DataCell(
           InkWell(
-            onTap: () => Navigator.pushNamed(
-              context,
-              AppRoutes.editProduct,
-              arguments: product,
-            ),
+            onTap: () async {
+              final result = await Navigator.pushNamed(
+                context,
+                AppRoutes.editProduct,
+                arguments: product,
+              );
+              if (result == true && context.mounted) {
+                context.read<ProductCubit>().fetchProducts();
+              }
+            },
             child: Row(
               children: [
                 TRoundedImage(
@@ -101,8 +119,8 @@ class ProductRows extends DataTableSource {
                 width: 30,
                 height: 30,
                 padding: 2,
-                image: product.brandImage,
-                imageType: product.brandImage.startsWith('http')
+                image: _brandImageFor(product),
+                imageType: _brandImageFor(product).startsWith('http')
                     ? ImageType.network
                     : ImageType.asset,
                 borderRadius: TSizes.sm,
@@ -134,17 +152,22 @@ class ProductRows extends DataTableSource {
           Row(
             children: [
               IconButton(
-                onPressed: () => Navigator.pushNamed(
-                  context,
-                  AppRoutes.editProduct,
-                  arguments: product,
-                ),
+                onPressed: () async {
+                  final result = await Navigator.pushNamed(
+                    context,
+                    AppRoutes.editProduct,
+                    arguments: product,
+                  );
+                  if (result == true && context.mounted) {
+                    context.read<ProductCubit>().fetchProducts();
+                  }
+                },
                 icon:
                     const Icon(Iconsax.edit, color: TColors.primary, size: 20),
               ),
               IconButton(
                 onPressed: () {
-                  // TODO: Implement delete
+                  context.read<ProductCubit>().deleteProduct(product.id);
                 },
                 icon: const Icon(Iconsax.trash, color: TColors.error, size: 20),
               ),

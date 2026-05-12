@@ -1,7 +1,7 @@
 import 'package:yt_ecommerce_admin_panel/core/data/datasources/firestore_data_source.dart';
 
 class ProductDataSource extends BaseFirestoreDataSource {
-  ProductDataSource() : super(collectionName: 'products');
+  ProductDataSource() : super(collectionName: 'Products');
 
   Future<List<Map<String, dynamic>>> getProducts() async {
     return getAll();

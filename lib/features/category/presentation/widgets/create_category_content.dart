@@ -41,6 +41,9 @@ class _CreateCategoryContentState extends State<CreateCategoryContent> {
     _selectedParent = cat?.parentCategory ?? '';
     _isFeatured = cat?.isFeatured ?? false;
     _imageUrl = cat?.image;
+
+    // Fetch categories for parent dropdown
+    context.read<CategoryCubit>().fetchCategories();
   }
 
   @override
@@ -104,13 +107,49 @@ class _CreateCategoryContentState extends State<CreateCategoryContent> {
                         BlocBuilder<CategoryCubit,
                             ApiState<List<CategoryModel>>>(
                           builder: (context, state) {
+                            // Handle loading state
+                            if (state.isLoading) {
+                              return const Padding(
+                                padding: EdgeInsets.symmetric(vertical: TSizes.md),
+                                child: Center(
+                                  child: SizedBox(
+                                    height: 24,
+                                    width: 24,
+                                    child: CircularProgressIndicator(strokeWidth: 2),
+                                  ),
+                                ),
+                              );
+                            }
+
+                            // Handle error state
+                            if (state.isError) {
+                              return Column(
+                                children: [
+                                  Text(
+                                    'Failed to load categories',
+                                    style: TextStyle(color: TColors.error),
+                                  ),
+                                  const SizedBox(height: TSizes.sm),
+                                  TextButton.icon(
+                                    onPressed: () => context
+                                        .read<CategoryCubit>()
+                                        .fetchCategories(),
+                                    icon: const Icon(Iconsax.refresh),
+                                    label: const Text('Retry'),
+                                  ),
+                                ],
+                              );
+                            }
+
                             final categories = state.data ?? [];
                             final parentNames =
                                 CategoryModel.parentCategoryNames(categories);
                             return DropdownButtonFormField<String>(
-                              initialValue: _selectedParent.isEmpty
-                                  ? null
-                                  : _selectedParent,
+                              value: _selectedParent.isEmpty
+                                  ? ''
+                                  : (parentNames.contains(_selectedParent)
+                                      ? _selectedParent
+                                      : ''),
                               decoration: const InputDecoration(
                                 labelText: 'Parent Category',
                                 prefixIcon: Icon(Iconsax.bezier),
@@ -168,7 +207,7 @@ class _CreateCategoryContentState extends State<CreateCategoryContent> {
                               child: ElevatedButton(
                                 onPressed: isLoading
                                     ? null
-                                    : () {
+                                    : () async {
                                         if (_formKey.currentState!.validate()) {
                                           final category = CategoryModel(
                                             id: _isEditing
@@ -180,21 +219,25 @@ class _CreateCategoryContentState extends State<CreateCategoryContent> {
                                             parentId: _selectedParent,
                                             image: _imageUrl ?? '',
                                             isFeatured: _isFeatured,
-                                            createdAt: _isEditing
-                                                ? widget.category!.createdAt
-                                                : DateTime.now(),
                                           );
 
                                           if (_isEditing) {
-                                            context
+                                            await context
                                                 .read<CategoryCubit>()
                                                 .updateCategory(category);
                                           } else {
-                                            context
+                                            await context
                                                 .read<CategoryCubit>()
                                                 .createCategory(category);
                                           }
-                                          Navigator.pop(context);
+                                          if (!mounted) return;
+                                          if (context
+                                                  .read<CategoryCubit>()
+                                                  .state
+                                                  .status ==
+                                              ApiStatus.success) {
+                                            Navigator.pop(context, true);
+                                          }
                                         }
                                       },
                                 style: ElevatedButton.styleFrom(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:yt_ecommerce_admin_panel/core/common/widgets/breadcrumbs/breadcrumb_with_heading.dart';
 import 'package:yt_ecommerce_admin_panel/core/common/widgets/containers/rounded_container.dart';
@@ -7,8 +8,10 @@ import 'package:yt_ecommerce_admin_panel/core/routes/app_routes.dart';
 import 'package:yt_ecommerce_admin_panel/core/utils/constants/colors.dart';
 import 'package:yt_ecommerce_admin_panel/core/utils/constants/enums.dart';
 import 'package:yt_ecommerce_admin_panel/core/utils/constants/sizes.dart';
+import 'package:yt_ecommerce_admin_panel/core/utils/cubit/base_state.dart';
 import 'package:yt_ecommerce_admin_panel/core/utils/device/device_utility.dart';
 import 'package:yt_ecommerce_admin_panel/features/banner/data/models/banner_model.dart';
+import 'package:yt_ecommerce_admin_panel/features/banner/presentation/cubit/banner_cubit.dart';
 import 'package:yt_ecommerce_admin_panel/features/media/presentation/widgets/media_image_picker.dart';
 
 class CreateBannerContent extends StatefulWidget {
@@ -44,6 +47,10 @@ class _CreateBannerContentState extends State<CreateBannerContent> {
     final isDesktop = TDeviceUtils.isDesktopScreen(context);
     final heading = _isEditing ? 'Update Banner' : 'Create Banner';
     final breadcrumb = _isEditing ? 'Update Banner' : 'Create Banner';
+    final dropdownRoutes = <String>{
+      ...BannerModel.availableRoutes,
+      if (_targetScreen.isNotEmpty) _targetScreen,
+    }.toList();
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -98,11 +105,13 @@ class _CreateBannerContentState extends State<CreateBannerContent> {
 
                       // ── Target Screen Dropdown ────
                       DropdownButtonFormField<String>(
-                        initialValue: _targetScreen,
+                        initialValue: dropdownRoutes.contains(_targetScreen)
+                            ? _targetScreen
+                            : dropdownRoutes.first,
                         decoration: const InputDecoration(
                           prefixIcon: Icon(Iconsax.routing),
                         ),
-                        items: BannerModel.availableRoutes
+                        items: dropdownRoutes
                             .map((route) => DropdownMenuItem(
                                   value: route,
                                   child: Text(route),
@@ -114,25 +123,65 @@ class _CreateBannerContentState extends State<CreateBannerContent> {
                       const SizedBox(height: TSizes.spaceBtwSections),
 
                       // ── Submit Button ────────────
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            // TODO: Implement create/update logic
-                            Navigator.pop(context);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: TColors.primary,
-                            foregroundColor: Colors.white,
-                            padding:
-                                const EdgeInsets.symmetric(vertical: TSizes.md),
-                            shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.circular(TSizes.borderRadiusMd),
+                      BlocBuilder<BannerCubit, ApiState<List<BannerModel>>>(
+                        builder: (context, state) {
+                          final isLoading = state.status == ApiStatus.loading;
+                          return SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: isLoading
+                                  ? null
+                                  : () async {
+                                      final banner = BannerModel(
+                                        id: _isEditing
+                                            ? widget.banner!.id
+                                            : DateTime.now()
+                                                .millisecondsSinceEpoch
+                                                .toString(),
+                                        image: _imageUrl ?? '',
+                                        targetScreen: _targetScreen,
+                                        isActive: _isActive,
+                                        createdAt: _isEditing
+                                            ? widget.banner!.createdAt
+                                            : DateTime.now(),
+                                      );
+
+                                      if (_isEditing) {
+                                        await context
+                                            .read<BannerCubit>()
+                                            .updateBanner(banner);
+                                      } else {
+                                        await context
+                                            .read<BannerCubit>()
+                                            .createBanner(banner);
+                                      }
+                                      if (!mounted) return;
+                                      if (context.read<BannerCubit>().state.status ==
+                                          ApiStatus.success) {
+                                        Navigator.pop(context, true);
+                                      }
+                                    },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: TColors.primary,
+                                foregroundColor: Colors.white,
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: TSizes.md),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      TSizes.borderRadiusMd),
+                                ),
+                              ),
+                              child: isLoading
+                                  ? const SizedBox(
+                                      height: 20,
+                                      width: 20,
+                                      child: CircularProgressIndicator(
+                                          strokeWidth: 2, color: Colors.white),
+                                    )
+                                  : Text(_isEditing ? 'Update' : 'Create'),
                             ),
-                          ),
-                          child: Text(_isEditing ? 'Update' : 'Create'),
-                        ),
+                          );
+                        },
                       ),
                     ],
                   ),
@@ -202,7 +251,6 @@ class _CreateBannerContentState extends State<CreateBannerContent> {
           ),
         ),
       ],
-      
     );
   }
 }

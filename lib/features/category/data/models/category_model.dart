@@ -10,7 +10,7 @@ class CategoryModel implements BaseEntity, UploadableEntity {
   final String image;
   final bool isFeatured;
   @override
-  final DateTime createdAt;
+  final DateTime? createdAt;
   @override
   final DateTime? updatedAt;
 
@@ -20,9 +20,12 @@ class CategoryModel implements BaseEntity, UploadableEntity {
     this.parentId = '',
     this.image = '',
     this.isFeatured = false,
-    required this.createdAt,
+    this.createdAt,
     this.updatedAt,
   });
+
+  String get formattedDate =>
+      createdAt != null ? THelperFunctions.getFormattedDate(createdAt!) : '';
 
   @override
   String get imageUrl => image;
@@ -44,7 +47,6 @@ class CategoryModel implements BaseEntity, UploadableEntity {
       parentId: parentId,
       image: newImageUrl,
       isFeatured: isFeatured,
-      createdAt: createdAt,
       updatedAt: updatedAt,
     );
   }
@@ -59,7 +61,6 @@ class CategoryModel implements BaseEntity, UploadableEntity {
     return this;
   }
 
-  String get formattedDate => THelperFunctions.getFormattedDate(createdAt);
   String get parentCategory => parentId;
 
   CategoryModel copyWith({
@@ -77,57 +78,37 @@ class CategoryModel implements BaseEntity, UploadableEntity {
       parentId: parentId ?? this.parentId,
       image: image ?? this.image,
       isFeatured: isFeatured ?? this.isFeatured,
-      createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
-      'name': name,
-      'parentId': parentId,
-      'image': image,
-      'isFeatured': isFeatured,
-      'createdAt': createdAt.toIso8601String(),
-      if (updatedAt != null) 'updatedAt': updatedAt!.toIso8601String(),
+      'Id': id,
+      'Name': name,
+      'Image': image,
+      'ParentId': parentId,
+      'IsFeatured': isFeatured,
     };
   }
 
   factory CategoryModel.fromJson(Map<String, dynamic> json) {
     return CategoryModel(
-      id: json['id'] as String? ?? '',
-      name: json['name'] as String? ?? '',
-      parentId: json['parentId'] as String? ??
-          json['parentCategory'] as String? ??
-          '',
-      image: json['image'] as String? ?? '',
-      isFeatured: json['isFeatured'] as bool? ?? false,
-      createdAt: json['createdAt'] != null
-          ? (json['createdAt'] is int
-              ? DateTime.fromMillisecondsSinceEpoch(json['createdAt'])
-              : DateTime.parse(json['createdAt']))
-          : DateTime.now(),
-      updatedAt: json['updatedAt'] != null
-          ? (json['updatedAt'] is int
-              ? DateTime.fromMillisecondsSinceEpoch(json['updatedAt'])
-              : DateTime.tryParse(json['updatedAt']))
-          : null,
+      id: json['Id'] ?? '',
+      name: json['Name'] ?? '',
+      image: json['Image'] ?? '',
+      parentId: json['ParentId'] ?? '',
+      isFeatured: json['IsFeatured'] ?? false,
     );
   }
 
   static CategoryModel empty() => CategoryModel(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
         name: '',
-        createdAt: DateTime.now(),
       );
 
   static List<String> parentCategoryNames(List<CategoryModel> categories) {
     final names = categories.map((c) => c.name).toSet().toList()..sort();
     return ['', ...names];
   }
-
-  // DEPRECATED - Use Cubit to fetch categories instead
-  @Deprecated('Use CategoryCubit to fetch categories')
-  static List<CategoryModel> get dummyCategories => [];
 }

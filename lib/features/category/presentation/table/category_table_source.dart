@@ -33,18 +33,23 @@ class CategoryRows extends DataTableSource {
                 height: 45,
                 padding: TSizes.xs,
                 image: category.image,
-                imageType: ImageType.asset,
+                imageType: ImageType.network,
                 borderRadius: TSizes.borderRadiusMd,
                 backgroundColor: TColors.primaryBackground,
               ),
               const SizedBox(width: TSizes.spaceBtwItems),
               Expanded(
                 child: InkWell(
-                  onTap: () => Navigator.pushNamed(
-                    context,
-                    AppRoutes.editCategory,
-                    arguments: category,
-                  ),
+                  onTap: () async {
+                    final result = await Navigator.pushNamed(
+                      context,
+                      AppRoutes.editCategory,
+                      arguments: category,
+                    );
+                    if (result == true && context.mounted) {
+                      context.read<CategoryCubit>().fetchCategories();
+                    }
+                  },
                   child: Text(
                     category.name,
                     style: Theme.of(context)
@@ -74,18 +79,23 @@ class CategoryRows extends DataTableSource {
         ),
 
         // ── Date ─────────────────────────────────────
-        DataCell(Text(category.formattedDate)),
+        const DataCell(Text("")),
 
         // ── Action ───────────────────────────────────
         DataCell(
           Row(
             children: [
               IconButton(
-                onPressed: () => Navigator.pushNamed(
-                  context,
-                  AppRoutes.editCategory,
-                  arguments: category,
-                ),
+                onPressed: () async {
+                  final result = await Navigator.pushNamed(
+                    context,
+                    AppRoutes.editCategory,
+                    arguments: category,
+                  );
+                  if (result == true && context.mounted) {
+                    context.read<CategoryCubit>().fetchCategories();
+                  }
+                },
                 icon: const Icon(Iconsax.edit, color: TColors.primary),
               ),
               IconButton(
